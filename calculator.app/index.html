@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Calculator</title>
+  <!-- Favicon (Tab ka icon) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📐</text></svg>">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Modern Animated Background -->
+  <div class="animated-bg">
+    <div class="circle circle1"></div>
+    <div class="circle circle2"></div>
+    <div class="circle circle3"></div>
+  </div>
+
+  <!-- ================= TOP BAR WITH DARK MODE TOGGLE ================= -->
+   <div class="top-bar">
+    <!-- Naya Sound Button -->
+    <button id="soundToggle" class="theme-toggle" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); margin-right: 10px;">
+      <span class="toggle-icon" id="soundIcon">🔊</span>
+      <span class="toggle-text" id="soundText">Sound On</span>
+    </button>
+
+    <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
+      <span class="toggle-icon">🌙</span>
+      <span class="toggle-text">Dark Mode</span>
+    </button>
+  </div>
+
+  <!-- ================= HEADER ================= -->
+  <header class="site-header">
+    <h1>📐 Digital  Calculator</h1>
+    <p class="welcome">Welcome! Calculate area & perimeter of shapes instantly.</p>
+    <p class="description">
+      A simple, accurate and professional calculator for 2D and 3D geometric shapes.
+      Works on desktop and mobile. No internet required after download.
+    </p>
+  </header>
+
+     <!-- ================= 2D SHAPES ================= -->
+  <div class="shape-group">
+    <h3 class="shape-group-title">📐 2D Shapes (Area & Perimeter)</h3>
+    <nav class="shape-nav" id="shapeNav">
+      <button class="shape-btn active" data-shape="rectangle">▭ Rectangle</button>
+      <button class="shape-btn" data-shape="square">□ Square</button>
+      <button class="shape-btn" data-shape="triangle">△ Triangle</button>
+      <button class="shape-btn" data-shape="circle">◯ Circle</button>
+      <button class="shape-btn" data-shape="parallelogram">▱ Parallelogram</button>
+      <button class="shape-btn" data-shape="rhombus">◇ Rhombus</button>
+      <button class="shape-btn" data-shape="trapezoid">⏢ Trapezoid</button>
+      <button class="shape-btn" data-shape="pentagon">⬠ Pentagon</button>
+      <button class="shape-btn" data-shape="hexagon">⬡ Hexagon</button>
+      <button class="shape-btn" data-shape="ellipse">⬭ Ellipse</button>
+    </nav>
+  </div>
+
+  <!-- ================= 3D SHAPES ================= -->
+  <div class="shape-group">
+    <h3 class="shape-group-title">🧊 3D Shapes (Volume & Surface Area)</h3>
+    <nav class="shape-nav" id="shapeNav3D">
+      <button class="shape-btn" data-shape="cube">🧊 Cube</button>
+      <button class="shape-btn" data-shape="cuboid">📦 Cuboid</button>
+      <button class="shape-btn" data-shape="sphere">🔮 Sphere</button>
+      <button class="shape-btn" data-shape="cylinder">🥫 Cylinder</button>
+      <button class="shape-btn" data-shape="cone">🍦 Cone</button>
+      <button class="shape-btn" data-shape="pyramid">🔺 Square Pyramid</button>
+    </nav>
+  </div>
+  
+   <!-- ================= UNIT SELECTOR ================= -->
+  <div class="unit-selector">
+    <label for="unitSelect">📏 Measurement Unit:</label>
+    <select id="unitSelect">
+      <option value="cm">Centimeter (cm)</option>
+      <option value="m">Meter (m)</option>
+      <option value="in">Inch (in)</option>
+      <option value="ft">Foot (ft)</option>
+      <option value="km">Kilometer (km)</option>
+      <option value="mi">Mile (mi)</option>
+    </select>
+  </div>
+
+  <main class="calculator">
+    <section class="input-panel">
+      <div class="formula-hint" id="formulaHint">Select a shape to see its formula</div>
+      <div id="inputFields"></div>
+                <div class="action-buttons">
+        <button class="btn btn-area" id="btnArea">📐 Calculate Area</button>
+        <button class="btn btn-perimeter" id="btnPerimeter">📏 Calculate Perimeter</button>
+        <button class="btn btn-clear" id="btnClear">⟲ Clear / Reset</button>
+        <button class="btn btn-print" id="btnPrint">🖨️ Print / Save PDF</button>
+      </div>
+    </section>
+
+       <aside class="result-panel">
+            <div class="result-box">
+        <span class="result-label" id="label1">Area</span>
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+          <span class="result-value" id="resultArea">—</span>
+          <button class="copy-btn" id="copyAreaBtn" title="Copy Area">📋</button>
+        </div>
+      </div>
+      <div class="result-box">
+        <span class="result-label" id="label2">Perimeter</span>
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+          <span class="result-value" id="resultPerimeter">—</span>
+          <button class="copy-btn" id="copyPerimeterBtn" title="Copy Perimeter">📋</button>
+        </div>
+      </div>
+      <div class="error-box hidden" id="errorBox">
+        ⚠️ <span id="errorText"></span>
+      </div>
+    </aside>
+  </main>
+
+  <!-- ================= FORMULA EXPLANATION ================= -->
+  <section class="explanation-section">
+    <button class="explanation-toggle" id="explanationToggle">
+      📖 Show Formula Explanation
+    </button>
+    <div class="explanation-content hidden" id="explanationContent">
+      <h3 id="explanationTitle">Formula Explanation</h3>
+      <div class="explanation-body" id="explanationBody">
+        <p>Select a shape to see its explanation.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CALCULATION HISTORY ================= -->
+  <section class="history-section">
+    <div class="history-header">
+      <h2>📜 Calculation History</h2>
+      <button class="btn-clear-history" id="btnClearHistory">🗑️ Clear History</button>
+    </div>
+    <div class="history-list" id="historyList">
+      <p class="history-empty" id="historyEmpty">No calculations yet. Try one above!</p>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <p>© 2026 Geometric Shapes Calculator | Built for learning & real use.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
