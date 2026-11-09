@@ -5,18 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Digital Calculator</title>
   
-  <!-- Google Translate API -->
-  <script type="text/javascript">
-    function googleTranslateElementInit() {
-      new google.translate.TranslateElement({
-        pageLanguage: 'en',
-        includedLanguages: 'en,ur,ar,hi,zh-CN,fr,es',
-        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-      }, 'google_translate_element');
-    }
-  </script>
-  <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
   <!-- Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📐</text></svg>">
   
@@ -24,8 +12,8 @@
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0d47a1">
 
-  <!-- 🔒 CSP SECURITY TAG (Google Translate allowed) -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://translate.google.com https://translate.googleapis.com; style-src 'self' 'unsafe-inline' https://translate.googleapis.com; img-src 'self' data: https://translate.googleapis.com; frame-src https://translate.google.com; connect-src 'self' https://translate.googleapis.com; object-src 'none'; base-uri 'self';">
+  <!-- Security Header (Bina kisi Google Translate ke) -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; object-src 'none'; base-uri 'self';">
 
   <link rel="stylesheet" href="style.css">
 </head>
@@ -38,13 +26,10 @@
     <div class="circle circle3"></div>
   </div>
 
-  <!-- Hidden div for Google Translate -->
-  <div id="google_translate_element" style="display:none;"></div>
-
   <!-- ================= TOP BAR ================= -->
   <div class="top-bar">
     
-      <!-- Multi-Language Selector -->
+    <!-- Language Selector Dropdown -->
     <select id="languageSelect" class="theme-toggle" style="padding: 10px 15px; font-weight: bold; cursor: pointer; border-radius: 50px; outline: none; margin-right: 10px;" onchange="changeLanguage(this.value)">
       <option value="en">🇬🇧 English</option>
       <option value="ur">🇵🇰 Urdu</option>
@@ -56,18 +41,6 @@
       <option value="de">🇩🇪 German</option>
       <option value="ru">🇷🇺 Russian</option>
       <option value="ja">🇯🇵 Japanese</option>
-      <option value="pt">🇵🇹 Portuguese</option>
-      <option value="bn">🇧🇩 Bengali</option>
-      <option value="tr">🇹🇷 Turkish</option>
-      <option value="fa">🇮🇷 Persian</option>
-      <option value="it">🇮🇹 Italian</option>
-      <option value="ko">🇰🇷 Korean</option>
-      <option value="id">🇮🇩 Indonesian</option>
-      <option value="ms">🇲🇾 Malay</option>
-      <option value="th">🇹🇭 Thai</option>
-      <option value="vi">🇻🇳 Vietnamese</option>
-      <option value="nl">🇳🇱 Dutch</option>
-      <option value="pl">🇵🇱 Polish</option>
     </select>
 
     <!-- Install App Button (Shuru mein hide rahega) -->
