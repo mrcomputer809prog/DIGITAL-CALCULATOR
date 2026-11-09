@@ -69,28 +69,30 @@
     <p class="description">A simple, accurate and professional calculator for 2D and 3D geometric shapes.</p>
   </header>
 
-   <!-- ================= CALCULATOR MODES (Responsive) ================= -->
+   <!-- ================= CALCULATOR MODES ================= -->
   <div class="modes-container">
     
-    <!-- Desktop aur Mobile par hamesha dikhne wala main button -->
+    <!-- Main Button (Hamesha bahar rahega) -->
     <button id="sciModeBtn" class="btn mode-btn" style="background: linear-gradient(135deg, #8e2de2, #4a00e0); color: white;">
       🧮 Scientific Calculator
     </button>
 
-    <!-- Mobile ke liye 3 Dots ka Button (Desktop par hide rahega) -->
-    <button id="mobileMenuBtn" class="btn mobile-menu-btn">⋮ More Tools</button>
+    <!-- Mobile ka 3 dots (Desktop par CSS se hide hai) -->
+    <button id="mobileMenuBtn" class="btn mobile-menu-btn">⋮</button>
 
-    <!-- Baqi Tools ka Dropdown (Desktop par direct dikhega, Mobile par menu mein) -->
+    <!-- Baqi Tools (Desktop par direct dikhenge, Mobile par dropdown mein) -->
     <div class="more-tools-menu" id="moreToolsMenu">
       <button id="unitConvBtn" class="btn" style="background: linear-gradient(135deg, #11998e, #38ef7d); color: white;">
         📏 Unit Converter
       </button>
       <button id="ratioCalcBtn" class="btn" style="background: linear-gradient(135deg, #f12711, #f5af19); color: white;">
-        ⚖️ Ratio Calculator
+        ⚖️ Ratio
       </button>
-      <!-- Naya Percentage Button -->
       <button id="percentageCalcBtn" class="btn" style="background: linear-gradient(135deg, #00b4db, #0083b0); color: white;">
         📊 Percentage
+      </button>
+      <button id="logCalcBtn" class="btn" style="background: linear-gradient(135deg, #8E2DE2, #4A00E0); color: white;">
+        📈 Logarithm
       </button>
     </div>
   <!-- ================= RATIO CALCULATOR PANEL ================= -->
@@ -133,6 +135,40 @@
     </div>
     
     <button id="closePercentageBtn" class="btn" style="margin-top: 25px; background: #ff4b2b; color: white; width: 100%;">Close Calculator</button>
+  </div> 
+ <!-- ================= LOGARITHM CALCULATOR PANEL ================= -->
+  <div id="logCalculatorPanel" class="calculator hidden" style="flex-direction: column; align-items: center; justify-content: center; max-width: 600px; margin: 0 auto 30px auto;">
+    <h2 style="color: var(--text-accent); margin-bottom: 20px;">📈 Logarithm Calculator</h2>
+    
+    <div style="width: 100%; margin-bottom: 20px;">
+      <select id="logType" class="unit-selector select" style="width: 100%; padding: 15px; border-radius: 12px; border: 2px solid var(--input-border); background: var(--input-bg); color: var(--text-primary); font-size: 1.1rem; outline: none; font-weight: bold;">
+        <option value="log10">Log base 10 (Common Log)</option>
+        <option value="ln">Natural Log (ln - base e)</option>
+        <option value="log2">Log base 2 (Binary Log)</option>
+        <option value="custom">Custom Base (Log_b)</option>
+      </select>
+    </div>
+
+    <div style="display: flex; gap: 15px; width: 100%; flex-wrap: wrap; margin-bottom: 20px;">
+      <div style="flex: 1; min-width: 200px;">
+        <label style="font-weight: 600; font-size: 0.9rem; margin-bottom: 5px; display: block;">Number (x)</label>
+        <input type="number" id="logNumber" placeholder="e.g. 100" style="width: 100%; padding: 15px; border-radius: 12px; border: 2px solid var(--input-border); background: var(--input-bg); color: var(--text-primary); font-size: 1.1rem; outline: none;">
+      </div>
+      
+      <div id="customBaseDiv" style="flex: 1; min-width: 200px; display: none;">
+        <label style="font-weight: 600; font-size: 0.9rem; margin-bottom: 5px; display: block;">Base (b)</label>
+        <input type="number" id="logBase" placeholder="e.g. 2" style="width: 100%; padding: 15px; border-radius: 12px; border: 2px solid var(--input-border); background: var(--input-bg); color: var(--text-primary); font-size: 1.1rem; outline: none;">
+      </div>
+    </div>
+    
+    <button class="btn btn-area" onclick="calculateLog()" style="width: 100%; margin-bottom: 15px;">Calculate Logarithm</button>
+    
+    <div style="width: 100%; padding: 20px; background: var(--result-bg); border-radius: 12px; border: 1px solid var(--glass-border); text-align: center;">
+      <span style="font-size: 0.9rem; color: var(--text-secondary); text-transform: uppercase; font-weight: bold;">Result:</span>
+      <div id="logResult" style="font-size: 2.5rem; font-weight: 800; color: var(--text-accent); margin-top: 10px;">—</div>
+    </div>
+    
+    <button id="closeLogBtn" class="btn" style="margin-top: 25px; background: #ff4b2b; color: white; width: 100%;">Close Calculator</button>
   </div>
   <!-- ================= UNIT CONVERTER PANEL ================= -->
   <div id="unitConverterPanel" class="calculator hidden" style="flex-direction: column; align-items: center; justify-content: center; max-width: 600px; margin: 0 auto 30px auto;">

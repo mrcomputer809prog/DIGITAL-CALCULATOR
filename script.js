@@ -427,7 +427,8 @@ function init() {
   if (closeSciBtn) { closeSciBtn.addEventListener('click', () => { sciPanel.classList.add('hidden'); document.querySelector('main.calculator').classList.remove('hidden'); mainGroups.forEach(g => g.classList.remove('hidden')); if(topBar) topBar.classList.remove('hidden'); if(unitSel) unitSel.classList.remove('hidden'); }); }
 
   setupThemeToggle(); setupHistory(); setupUnitSelector(); setupExplanation(); setupPrintAndCopy();
-  setupUnitConverter(); setupRatioCalculator(); setupMobileMenu(); setupPercentageCalculator();  switchShape('rectangle');
+  setupUnitConverter(); setupRatioCalculator();   setupLogCalculator(); 
+  setupMobileMenu();  setupPercentageCalculator();  switchShape('rectangle');
 }
 // ==================== 11. RATIO CALCULATOR LOGIC ====================
 function gcd(a, b) {
@@ -495,14 +496,16 @@ function setupRatioCalculator() {
       if(unitSel) unitSel.classList.remove('hidden');
     });
   }
-}// ==================== 13. MOBILE MENU LOGIC ====================
+}
+// ==================== 14. MOBILE MENU LOGIC (FIXED) ====================
 function setupMobileMenu() {
   const mobileMenuBtn = document.getElementById('mobileMenuBtn');
   const moreToolsMenu = document.getElementById('moreToolsMenu');
 
   if (mobileMenuBtn && moreToolsMenu) {
+    // 3 dots par click karne se menu open/close ho
     mobileMenuBtn.addEventListener('click', (e) => {
-      e.stopPropagation(); // Click ko bahar jane se roke
+      e.stopPropagation(); 
       moreToolsMenu.classList.toggle('show-menu');
     });
 
@@ -512,9 +515,16 @@ function setupMobileMenu() {
         moreToolsMenu.classList.remove('show-menu');
       }
     });
+
+    // 🌟 ASAL FIX: Jab menu ke andar kisi bhi tool par click ho, toh menu khud band ho jaye
+    const menuButtons = moreToolsMenu.querySelectorAll('.btn');
+    menuButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        moreToolsMenu.classList.remove('show-menu');
+      });
+    });
   }
-}
-// ==================== 12. PERCENTAGE CALCULATOR LOGIC ====================
+}// ==================== 12. PERCENTAGE CALCULATOR LOGIC ====================
 function calculatePercentage() {
   const obtained = parseFloat(document.getElementById('percObtained').value);
   const total = parseFloat(document.getElementById('percTotal').value);
@@ -567,7 +577,135 @@ function setupPercentageCalculator() {
     });
   }
 }
+// ==================== 13. LOGARITHM CALCULATOR LOGIC ====================
+function calculateLog() {
+  const type = document.getElementById('logType').value;
+  const num = parseFloat(document.getElementById('logNumber').value);
+  const resultField = document.getElementById('logResult');
 
+  if (isNaN(num) || num <= 0) {
+    resultField.textContent = "⚠️ Enter valid positive number";
+    resultField.style.color = "#ff4b2b";
+    return;
+  }
+
+  let result = 0;
+
+  if (type === 'log10') {
+    result = Math.log10(num);
+  } else if (type === 'ln') {
+    result = Math.log(num);
+  } else if (type === 'log2') {
+    result = Math.log2(num);
+  } else if (type === 'custom') {
+    const base = parseFloat(document.getElementById('logBase').value);
+    if (isNaN(base) || base <= 0 || base === 1) {
+      resultField.textContent = "⚠️ Invalid Base";
+      resultField.style.color = "#ff4b2b";
+      return;
+    }
+    result = Math.log(num) / Math.log(base);
+  }
+
+  resultField.textContent = Number(result.toFixed(4));
+  resultField.style.color = "var(--text-accent)";
+}
+
+function setupLogCalculator() {
+  const logBtn = document.getElementById('logCalcBtn');
+  const closeLogBtn = document.getElementById('closeLogBtn');
+  const logPanel = document.getElementById('logCalculatorPanel');
+  const mainGroups = document.querySelectorAll('.shape-group');
+  const topBar = document.querySelector('.top-bar');
+  const unitSel = document.querySelector('.unit-selector');
+  const normalCalc = document.querySelector('main.calculator');
+  const logType = document.getElementById('logType');
+  const customBaseDiv = document.getElementById('customBaseDiv');
+
+  if (logType) {
+    logType.addEventListener('change', () => {
+      if (logType.value === 'custom') {
+        customBaseDiv.style.display = 'block';
+      } else {
+        customBaseDiv.style.display = 'none';
+      }
+    });
+  }
+
+  if (logBtn) {
+    logBtn.addEventListener('click', () => {
+      logPanel.classList.remove('hidden');
+      normalCalc.classList.add('hidden');
+      mainGroups.forEach(g => g.classList.add('hidden'));
+      if(topBar) topBar.classList.add('hidden'); 
+      if(unitSel) unitSel.classList.add('hidden');
+      
+      document.getElementById('logNumber').value = '';
+      document.getElementById('logBase').value = '';
+      document.getElementById('logResult').textContent = '—';
+      
+      const moreToolsMenu = document.getElementById('moreToolsMenu');
+      if(moreToolsMenu) moreToolsMenu.classList.remove('show-menu');
+    });
+  }
+
+  if (closeLogBtn) {
+    closeLogBtn.addEventListener('click', () => {
+      logPanel.classList.add('hidden');
+      normalCalc.classList.remove('hidden');
+      mainGroups.forEach(g => g.classList.remove('hidden'));
+      if(topBar) topBar.classList.remove('hidden'); 
+      if(unitSel) unitSel.classList.remove('hidden');
+    });
+  }
+}
+// ==================== 15. CLOSE ALL PANELS (FIX FOR OVERLAPPING) ====================
+function closeAllPanels() {
+  // Saare calculators ke panels ki list
+  const panels = [
+    'scientificPanel', 
+    'unitConverterPanel', 
+    'ratioCalculatorPanel', 
+    'percentageCalculatorPanel', 
+    'logCalculatorPanel'
+  ];
+
+  // Har panel ko dhoond kar chhupa dein
+  panels.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.add('hidden');
+  });
+
+  // Normal calculator aur shapes ko wapas dikhayein
+  const normalCalc = document.querySelector('main.calculator');
+  const mainGroups = document.querySelectorAll('.shape-group');
+  const topBar = document.querySelector('.top-bar');
+  const unitSel = document.querySelector('.unit-selector');
+
+  if (normalCalc) normalCalc.classList.remove('hidden');
+  mainGroups.forEach(g => g.classList.remove('hidden'));
+  if (topBar) topBar.classList.remove('hidden');
+  if (unitSel) unitSel.classList.remove('hidden');
+}
+// ==================== 16. AUTO-CLOSE PANELS FIX ====================
+document.addEventListener('DOMContentLoaded', () => {
+  // Saare buttons jinse panels khulte hain
+  const toolButtons = [
+    'sciModeBtn', 
+    'unitConvBtn', 
+    'ratioCalcBtn', 
+    'percentageCalcBtn', 
+    'logCalcBtn'
+  ];
+
+  toolButtons.forEach(btnId => {
+    const btn = document.getElementById(btnId);
+    if (btn) {
+      // Jab bhi koi button dabega, pehle saare panel band karo
+      btn.addEventListener('click', closeAllPanels, true); // 'true' ka matlab pehle ye chale
+    }
+  });
+});
 init();
 
 if ('serviceWorker' in navigator) {

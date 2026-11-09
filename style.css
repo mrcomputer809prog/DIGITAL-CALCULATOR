@@ -351,8 +351,9 @@ body.dark-mode .sci-btn:hover { background: rgba(255, 255, 255, 0.1); }
     padding: 12px 5px !important;
     font-size: 1rem !important;
   }
-}/* ============================================================
-   RESPONSIVE MODES MENU (Desktop & Mobile)
+}
+/* ============================================================
+   FINAL MODES & TOOLS LAYOUT (100% FIXED - NO DUPLICATES)
    ============================================================ */
 
 .modes-container {
@@ -361,7 +362,7 @@ body.dark-mode .sci-btn:hover { background: rgba(255, 255, 255, 0.1); }
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
   width: 100%;
   max-width: 950px;
 }
@@ -373,6 +374,7 @@ body.dark-mode .sci-btn:hover { background: rgba(255, 255, 255, 0.1); }
   font-weight: 700;
   box-shadow: 0 5px 15px rgba(0,0,0,0.1);
   transition: all 0.3s ease;
+  white-space: nowrap; 
 }
 
 .mode-btn:hover, .more-tools-menu .btn:hover {
@@ -380,59 +382,59 @@ body.dark-mode .sci-btn:hover { background: rgba(255, 255, 255, 0.1); }
   box-shadow: 0 8px 20px rgba(0,0,0,0.2);
 }
 
-/* Desktop par tools direct nazar aane chahiye */
+/* Desktop Layout */
 .more-tools-menu {
   display: flex;
   gap: 12px;
+  align-items: center;
 }
 
-/* Mobile ka menu button desktop par hide rahega */
 .mobile-menu-btn {
-  display: none;
-  background: var(--glass-bg);
-  color: var(--text-primary);
-  border: 1px solid var(--glass-border);
-  font-size: 1.5rem;
-  padding: 10px 20px;
+  display: none !important;
 }
 
-/* === MOBILE VIEW (Max Width 768px) === */
+/* === MOBILE VIEW === */
 @media (max-width: 768px) {
   .modes-container {
     flex-direction: row;
     justify-content: space-between;
+    gap: 10px;
   }
 
   .mode-btn {
     flex: 1;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     padding: 12px 10px;
   }
 
-  /* Mobile par 3 dots ko dikhayein */
   .mobile-menu-btn {
-    display: block;
+    display: block !important;
+    background: var(--glass-bg);
+    color: var(--text-primary);
+    border: 1px solid var(--glass-border);
+    font-size: 1.5rem;
+    padding: 10px 20px;
+    border-radius: 30px;
+    cursor: pointer;
   }
 
-  /* Dropdown Menu ka design */
   .more-tools-menu {
-    display: none; /* Shuru mein chhupa hua */
+    display: none; 
     position: absolute;
     top: 100%;
     right: 10px;
     background: var(--glass-bg);
-    backdrop-filter: blur(15px);
+    backdrop-filter: blur(20px);
     border: 1px solid var(--glass-border);
     border-radius: 15px;
     padding: 10px;
     flex-direction: column;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    z-index: 1000;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    z-index: 10000;
     margin-top: 10px;
     min-width: 200px;
   }
 
-  /* Jab mobile menu open ho */
   .more-tools-menu.show-menu {
     display: flex;
     animation: fadeInDown 0.3s ease;
@@ -443,11 +445,117 @@ body.dark-mode .sci-btn:hover { background: rgba(255, 255, 255, 0.1); }
     text-align: left;
     justify-content: flex-start;
     padding: 12px 15px;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+    margin-bottom: 5px;
   }
 }
 
 @keyframes fadeInDown {
   from { opacity: 0; transform: translateY(-10px); }
   to { opacity: 1; transform: translateY(0); }
+}/* ============================================================
+   ULTIMATE FIX FOR LAYOUT (DONO DESKTOP & MOBILE)
+   ============================================================ */
+
+/* 1. Body ko wapas normal (upar se neeche) karein */
+body {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+}
+
+/* 2. Main calculator aur shapes ko wapas apni jagah (block) par laayein */
+main.calculator, .shape-group, .history-section, .explanation-section, .unit-selector {
+  width: 100% !important;
+  max-width: 950px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* 3. Buttons wale container ko perfect center karein */
+.modes-container {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: wrap !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 12px !important;
+  width: 100% !important;
+  max-width: 950px !important;
+  margin: 0 auto 25px auto !important;
+}
+
+/* 4. Saare mode buttons ko barabar size dein */
+.mode-btn, .more-tools-menu .btn {
+  flex: 0 1 auto !important;
+  padding: 15px 25px !important;
+  border-radius: 30px !important;
+  font-weight: 700 !important;
+  white-space: nowrap !important;
+}
+
+/* 5. Desktop par "More Tools" ko normal dikhayein */
+.more-tools-menu {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 12px !important;
+  position: static !important;
+}
+
+.mobile-menu-btn {
+  display: none !important;
+}
+
+/* 6. Mobile ke liye alag layout */
+@media (max-width: 768px) {
+  /* Mobile par buttons ko line mein rakhein */
+  .modes-container {
+    flex-wrap: nowrap !important;
+    justify-content: space-between !important;
+  }
+  
+  .mode-btn {
+    flex: 1 1 0 !important;
+    padding: 12px 10px !important;
+    font-size: 0.9rem !important;
+  }
+
+  /* Mobile par 3 dots button dikhayein */
+  .mobile-menu-btn {
+    display: block !important;
+    flex: 0 0 auto !important;
+    background: var(--glass-bg) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--glass-border) !important;
+    font-size: 1.5rem !important;
+    padding: 10px 15px !important;
+    border-radius: 30px !important;
+  }
+
+  /* Mobile dropdown menu */
+  .more-tools-menu {
+    display: none !important;
+    flex-direction: column !important;
+    position: absolute !important;
+    top: 60px !important;
+    right: 20px !important;
+    background: var(--glass-bg) !important;
+    backdrop-filter: blur(20px) !important;
+    border: 1px solid var(--glass-border) !important;
+    border-radius: 15px !important;
+    padding: 10px !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important;
+    z-index: 10000 !important;
+    min-width: 200px !important;
+  }
+
+  .more-tools-menu.show-menu {
+    display: flex !important;
+  }
+
+  .more-tools-menu .btn {
+    width: 100% !important;
+    margin-bottom: 5px !important;
+    justify-content: flex-start !important;
+  }
 }
