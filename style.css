@@ -1,1036 +1,405 @@
 /* ============================================================
-   GEOMETRIC SHAPES CALCULATOR — STYLESHEET
-   Light + Dark Mode, Responsive, Stylish Toggle
+   MODERN GLASSMORPHISM DESIGN (v7)
    ============================================================ */
 
-/* -------- 1. CSS VARIABLES (Light Mode Default) -------- */
 :root {
-  --bg-gradient-start: #e3f2fd;
-  --bg-gradient-end: #f5f7fa;
+  --bg-color: #e0e5ec;
   --text-primary: #1a2332;
-  --text-secondary: #455a64;
+  --text-secondary: #5a6b7c;
   --text-accent: #0d47a1;
-  --card-bg: #ffffff;
-  --panel-bg: #f5f9ff;
-  --panel-border: #e0e8f0;
-  --input-bg: #ffffff;
+  --glass-bg: rgba(255, 255, 255, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.8);
+  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+  --input-bg: rgba(255, 255, 255, 0.8);
   --input-border: #cfd8dc;
-  --input-focus: #1976d2;
-  --shape-btn-bg: #ffffff;
-  --shape-btn-border: #90caf9;
-  --shape-btn-text: #0d47a1;
-  --shape-btn-hover: #e3f2fd;
-  --shape-btn-active-bg: #0d47a1;
-  --shape-btn-active-text: #ffffff;
-  --formula-bg: #e3f2fd;
-  --formula-text: #0d47a1;
-  --formula-border: #0d47a1;
-  --result-bg: #ffffff;
-  --result-label: #607d8b;
-  --result-value: #0d47a1;
-  --error-bg: #ffebee;
-  --error-text: #c62828;
   --btn-area-bg: #2e7d32;
-  --btn-area-hover: #1b5e20;
   --btn-perimeter-bg: #1565c0;
-  --btn-perimeter-hover: #0d47a1;
-  --btn-clear-bg: #eceff1;
-  --btn-clear-text: #37474f;
-  --btn-clear-hover: #cfd8dc;
-  --footer-text: #78909c;
-  --shadow-main: 0 10px 30px rgba(0, 0, 0, 0.08);
-  --shadow-small: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --btn-clear-bg: rgba(255, 255, 255, 0.5);
+  --result-bg: rgba(255, 255, 255, 0.9);
 }
 
-/* -------- 2. DARK MODE VARIABLES -------- */
 body.dark-mode {
-  --bg-gradient-start: #0f0c29;
-  --bg-gradient-end: #1a1a2e;
+  --bg-color: #0f0c29;
   --text-primary: #eaeaea;
   --text-secondary: #b0bec5;
   --text-accent: #64b5f6;
-  --card-bg: #16213e;
-  --panel-bg: #0f3460;
-  --panel-border: #1a5490;
-  --input-bg: #0f3460;
+  --glass-bg: rgba(22, 33, 62, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+  --input-bg: rgba(15, 52, 96, 0.8);
   --input-border: #1a5490;
-  --input-focus: #64b5f6;
-  --shape-btn-bg: #0f3460;
-  --shape-btn-border: #1a5490;
-  --shape-btn-text: #eaeaea;
-  --shape-btn-hover: #1a5490;
-  --shape-btn-active-bg: #e94560;
-  --shape-btn-active-text: #ffffff;
-  --formula-bg: #0f3460;
-  --formula-text: #90caf9;
-  --formula-border: #e94560;
-  --result-bg: #16213e;
-  --result-label: #90caf9;
-  --result-value: #64b5f6;
-  --error-bg: #4a1c1c;
-  --error-text: #ff8a80;
-  --btn-area-bg: #1b5e20;
-  --btn-area-hover: #2e7d32;
-  --btn-perimeter-bg: #0d47a1;
-  --btn-perimeter-hover: #1565c0;
-  --btn-clear-bg: #37474f;
-  --btn-clear-text: #eaeaea;
-  --btn-clear-hover: #455a64;
-  --footer-text: #78909c;
-  --shadow-main: 0 10px 30px rgba(0, 0, 0, 0.5);
-  --shadow-small: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --result-bg: rgba(22, 33, 62, 0.9);
 }
 
-/* -------- 3. RESET & BODY -------- */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, sans-serif;
-  background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+  background-color: var(--bg-color);
+  color: var(--text-primary);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 20px;
-  color: var(--text-primary);
-  transition: background 0.4s ease, color 0.3s ease;
+  overflow-x: hidden;
+  transition: background-color 0.5s ease;
 }
 
-/* -------- 4. TOP BAR + STYLISH TOGGLE BUTTON -------- */
+/* --- Animated Background Circles --- */
+.animated-bg {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  z-index: -1;
+  overflow: hidden;
+}
+.circle {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.6;
+  animation: float 10s infinite ease-in-out alternate;
+}
+.circle1 { width: 300px; height: 300px; background: #4facfe; top: -10%; left: -10%; }
+.circle2 { width: 400px; height: 400px; background: #00f2fe; bottom: -20%; right: -10%; animation-delay: -5s; }
+.circle3 { width: 250px; height: 250px; background: #f093fb; top: 40%; left: 60%; animation-delay: -2s; }
+
+body.dark-mode .circle1 { background: #ff6a00; opacity: 0.3; }
+body.dark-mode .circle2 { background: #ee0979; opacity: 0.3; }
+body.dark-mode .circle3 { background: #4facfe; opacity: 0.2; }
+
+@keyframes float {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(50px, 50px) scale(1.1); }
+}
+
+/* --- Top Bar & Theme Toggle --- */
 .top-bar {
   width: 100%;
   max-width: 950px;
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 15px;
+  gap: 10px;
+  margin-bottom: 20px;
 }
 
 .theme-toggle {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 20px 10px 16px;
-  border: none;
+  padding: 10px 20px;
+  border: 1px solid var(--glass-border);
   border-radius: 50px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  font-size: 0.95rem;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  color: var(--text-primary);
   font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s ease;
+  box-shadow: var(--glass-shadow);
+}
+
+.theme-toggle:hover { transform: translateY(-2px); }
+#soundToggle { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; border: none; }
+
+/* --- Glass Panels --- */
+.shape-group, .calculator, .history-section, .explanation-content, .explanation-toggle {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: 24px;
+}
+
+.site-header { text-align: center; margin-bottom: 25px; }
+.site-header h1 { font-size: 2.5rem; color: var(--text-accent); margin-bottom: 10px; }
+.welcome { color: var(--text-secondary); font-weight: 500; }
+
+/* --- Shape Buttons --- */
+.shape-group { width: 100%; max-width: 950px; padding: 20px; margin-bottom: 20px; }
+.shape-group-title { font-size: 1rem; color: var(--text-accent); margin-bottom: 15px; text-align: center; }
+.shape-nav { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+
+.shape-btn {
+  background: var(--input-bg);
+  border: 1px solid var(--glass-border);
+  color: var(--text-primary);
+  padding: 10px 18px;
+  border-radius: 30px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+.shape-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+.shape-btn.active { background: var(--text-accent); color: white; border-color: var(--text-accent); }
+
+/* --- Main Calculator Area --- */
+.calculator { display: flex; flex-wrap: wrap; gap: 25px; width: 100%; max-width: 950px; padding: 25px; margin-bottom: 25px; }
+.input-panel { flex: 2 1 320px; }
+.result-panel { flex: 1 1 240px; display: flex; flex-direction: column; gap: 15px; }
+
+.formula-hint { background: rgba(255,255,255,0.4); padding: 12px; border-radius: 12px; margin-bottom: 15px; font-size: 0.9rem; text-align: center; color: var(--text-accent); }
+body.dark-mode .formula-hint { background: rgba(0,0,0,0.3); }
+
+/* --- Inputs --- */
+.input-group { display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px; }
+.input-group label { font-weight: 600; font-size: 0.9rem; }
+.input-with-unit { position: relative; display: flex; align-items: center; }
+.input-with-unit input {
+  width: 100%; padding: 14px 16px; border-radius: 12px; border: 1px solid var(--input-border);
+  background: var(--input-bg); color: var(--text-primary); font-size: 16px; outline: none; transition: 0.3s;
+}
+.input-with-unit input:focus { border-color: var(--text-accent); box-shadow: 0 0 0 3px rgba(13, 71, 161, 0.2); }
+.input-unit-label { position: absolute; right: 16px; font-weight: 700; color: var(--text-secondary); font-size: 0.85rem; }
+
+/* --- Result Boxes --- */
+.result-box { background: var(--result-bg); padding: 15px; border-radius: 16px; display: flex; flex-direction: column; position: relative; }
+.result-label { font-size: 0.8rem; text-transform: uppercase; font-weight: 700; color: var(--text-secondary); }
+.result-value { font-size: 1.8rem; font-weight: 800; color: var(--text-accent); word-break: break-word; }
+.copy-btn { position: absolute; right: 10px; bottom: 10px; background: none; border: none; font-size: 1.2rem; cursor: pointer; opacity: 0.6; transition: 0.2s; }
+.copy-btn:hover { opacity: 1; transform: scale(1.2); }
+
+/* --- Action Buttons --- */
+.action-buttons { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; }
+.btn { flex: 1 1 auto; padding: 15px; border: none; border-radius: 12px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: 0.3s; display: flex; justify-content: center; align-items: center; gap: 5px; }
+.btn-area { background: var(--btn-area-bg); color: white; }
+.btn-perimeter { background: var(--btn-perimeter-bg); color: white; }
+.btn-clear { background: var(--btn-clear-bg); color: var(--text-primary); border: 1px solid var(--glass-border); }
+.btn-print { background: #8e24aa; color: white; }
+.btn:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+
+/* --- History & Explanation --- */
+.history-section, .explanation-section { width: 100%; max-width: 950px; padding: 20px; margin-bottom: 25px; }
+.history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+.history-list { max-height: 250px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+.history-item { background: var(--input-bg); padding: 12px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--glass-border); }
+.history-shape-badge { background: var(--text-accent); color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; }
+
+.explanation-toggle { width: 100%; max-width: 950px; padding: 15px; margin-bottom: 15px; cursor: pointer; font-weight: bold; color: var(--text-accent); border: none; font-size: 1rem; }
+.explanation-content { width: 100%; max-width: 950px; padding: 25px; margin-bottom: 25px; }
+.explanation-formula-box { background: rgba(0,0,0,0.05); padding: 10px; border-radius: 10px; margin: 10px 0; font-family: monospace; font-size: 1rem; }
+body.dark-mode .explanation-formula-box { background: rgba(255,255,255,0.1); }
+
+.hidden { display: none !important; }
+.error-box { background: #ffebee; color: #c62828; padding: 12px; border-radius: 12px; margin-top: 10px; font-weight: bold; }
+
+/* --- Mobile Responsive --- */
+@media (max-width: 700px) {
+  .site-header h1 { font-size: 1.8rem; }
+  .shape-nav { display: grid; grid-template-columns: 1fr 1fr; }
+  .shape-btn:last-child { grid-column: span 2; }
+  .btn { flex: 1 1 100%; }
+  .top-bar { justify-content: center; }
+  .history-item { flex-direction: column; align-items: flex-start; gap: 8px; }
+}/* ============================================================
+   LUXURY UPGRADES (3D Buttons, Units, Formula Box)
+   ============================================================ */
+
+/* 1. 3D Shapes Ke Buttons Ko Royal Look Do */
+#shapeNav3D .shape-btn {
+  background: linear-gradient(135deg, #2b1055 0%, #7597de 100%);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 15px rgba(43, 16, 85, 0.4);
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+#shapeNav3D .shape-btn:hover {
+  background: linear-gradient(135deg, #7597de 0%, #2b1055 100%);
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(43, 16, 85, 0.6);
+}
+
+#shapeNav3D .shape-btn.active {
+  background: linear-gradient(135deg, #e65c00 0%, #F9D423 100%); /* Gold/Orange */
+  color: #1a1a1a;
+  border-color: #F9D423;
+  box-shadow: 0 8px 25px rgba(249, 212, 35, 0.5);
+  text-shadow: none;
+}
+
+body.dark-mode #shapeNav3D .shape-btn {
+  background: linear-gradient(135deg, #141E30 0%, #243B55 100%);
+  color: #e0e0e0;
+}
+body.dark-mode #shapeNav3D .shape-btn.active {
+  background: linear-gradient(135deg, #e65c00 0%, #F9D423 100%);
+  color: #1a1a1a;
+}
+
+/* 2. Measurement Units Ko Modern & Luxury Banao */
+.unit-selector {
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+  padding: 15px 25px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 25px;
+  transition: all 0.3s ease;
+}
+
+body.dark-mode .unit-selector {
+  background: rgba(15, 52, 96, 0.4);
+  border-color: rgba(100, 181, 246, 0.2);
+}
+
+.unit-selector label {
+  font-weight: 800;
+  color: var(--text-accent);
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.unit-selector select {
+  background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
+  border: 2px solid transparent;
+  border-radius: 12px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0d47a1;
+  cursor: pointer;
+  outline: none;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+  appearance: none; /* Removes default OS arrow */
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%230D47A1%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: right 15px top 50%;
+  background-size: 12px auto;
+}
+
+.unit-selector select:focus {
+  border-color: #0d47a1;
+  box-shadow: 0 0 15px rgba(13, 71, 161, 0.3);
+}
+
+body.dark-mode .unit-selector select {
+  background: #0f3460;
+  color: #64b5f6;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2364b5f6%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+}
+
+/* 3. Show Formula Explanation Ko Royal Box Banao */
+.explanation-toggle {
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%) !important;
+  color: white !important;
+  border: none;
+  border-radius: 15px;
+  padding: 18px;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+  box-shadow: 0 10px 20px rgba(30, 60, 114, 0.3);
+  transition: all 0.3s ease;
+}
+
+.explanation-toggle:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 25px rgba(30, 60, 114, 0.5);
+}
+
+body.dark-mode .explanation-toggle {
+  background: linear-gradient(135deg, #f12711 0%, #f5af19 100%) !important;
+  box-shadow: 0 10px 20px rgba(241, 39, 17, 0.3);
+}
+
+.explanation-content {
+  background: linear-gradient(145deg, #ffffff, #f0f4f8);
+  border: 2px solid #e1e8ed;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
   position: relative;
   overflow: hidden;
 }
 
-.theme-toggle::before {
+body.dark-mode .explanation-content {
+  background: linear-gradient(145deg, #16213e, #0f3460);
+  border-color: #1a5490;
+}
+
+.explanation-content::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-  transition: left 0.5s;
+  top: 0; left: 0; width: 5px; height: 100%;
+  background: linear-gradient(to bottom, #1e3c72, #2a5298);
 }
 
-.theme-toggle:hover::before {
-  left: 100%;
-}
-
-.theme-toggle:hover {
-  transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
-}
-
-.theme-toggle:active {
-  transform: translateY(-1px) scale(1.02);
-}
-
-.toggle-icon {
-  font-size: 1.3rem;
-  transition: transform 0.5s ease;
-  display: inline-block;
-}
-
-body.dark-mode .theme-toggle {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4);
-}
-
-body.dark-mode .theme-toggle:hover {
-  box-shadow: 0 8px 25px rgba(245, 87, 108, 0.6);
-}
-
-body.dark-mode .toggle-icon {
-  transform: rotate(360deg);
-}
-
-.toggle-text {
-  font-size: 0.9rem;
-  letter-spacing: 0.3px;
-}
-
-/* -------- 5. HEADER -------- */
-.site-header {
-  text-align: center;
-  max-width: 800px;
-  margin-bottom: 30px;
-}
-
-.site-header h1 {
-  font-size: 2.5rem;
-  color: var(--text-accent);
-  margin-bottom: 10px;
-  transition: color 0.3s;
-}
-
-.welcome {
-  font-size: 1.1rem;
-  color: var(--text-accent);
-  font-weight: 500;
-  margin-bottom: 8px;
-  transition: color 0.3s;
-}
-
-.description {
-  font-size: 0.95rem;
-  color: var(--text-secondary);
-  line-height: 1.5;
-  transition: color 0.3s;
-}
-
-/* -------- 6. SHAPE NAVIGATION BUTTONS -------- */
-.shape-nav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
-  max-width: 900px;
-  margin-bottom: 30px;
-}
-
-.shape-btn {
-  background: var(--shape-btn-bg);
-  border: 2px solid var(--shape-btn-border);
-  color: var(--shape-btn-text);
-  padding: 10px 18px;
-  border-radius: 30px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.25s ease;
-}
-
-.shape-btn:hover {
-  background: var(--shape-btn-hover);
-  transform: translateY(-2px);
-}
-
-.shape-btn.active {
-  background: var(--shape-btn-active-bg);
-  color: var(--shape-btn-active-text);
-  border-color: var(--shape-btn-active-bg);
-  box-shadow: 0 4px 15px rgba(13, 71, 161, 0.4);
-}
-
-/* -------- 7. MAIN CALCULATOR LAYOUT -------- */
-.calculator {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 25px;
-  max-width: 950px;
-  width: 100%;
-  background: var(--card-bg);
-  padding: 25px;
-  border-radius: 20px;
-  box-shadow: var(--shadow-main);
-  transition: background 0.4s ease, box-shadow 0.4s ease;
-}
-
-.input-panel {
-  flex: 2 1 320px;
-}
-
-.result-panel {
-  flex: 1 1 240px;
-  background: var(--panel-bg);
-  padding: 20px;
-  border-radius: 15px;
-  border: 1px solid var(--panel-border);
-  transition: background 0.4s ease, border-color 0.4s ease;
-}
-
-/* -------- 8. FORMULA HINT -------- */
-.formula-hint {
-  background: var(--formula-bg);
-  color: var(--formula-text);
-  padding: 12px 16px;
-  border-radius: 10px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  margin-bottom: 20px;
-  border-left: 4px solid var(--formula-border);
-  transition: all 0.4s ease;
-}
-
-/* -------- 9. INPUT FIELDS -------- */
-.input-group {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 15px;
-}
-
-.input-group label {
-  min-width: 90px;
-  font-weight: 600;
-  color: var(--text-primary);
-  font-size: 0.95rem;
-  transition: color 0.3s;
-}
-
-.input-group input {
-  flex: 1;
-  padding: 12px 16px;
-  border: 2px solid var(--input-border);
-  border-radius: 10px;
-  font-size: 16px;
-  outline: none;
-  background: var(--input-bg);
-  color: var(--text-primary);
-  transition: all 0.25s ease;
-}
-
-.input-group input:focus {
-  border-color: var(--input-focus);
-  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.15);
-}
-
-.input-group input.error-input {
-  border-color: #d32f2f;
-  background: #ffebee;
-  color: #c62828;
-}
-
-body.dark-mode .input-group input.error-input {
-  background: #4a1c1c;
-  color: #ff8a80;
-}
-
-/* -------- 10. ACTION BUTTONS -------- */
-.action-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-.btn {
-  flex: 1 1 auto;
-  padding: 14px 18px;
-  border: none;
-  border-radius: 10px;
-  font-size: 1rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  min-height: 48px;
-}
-
-.btn-area {
-  background: var(--btn-area-bg);
-  color: white;
-}
-.btn-area:hover {
-  background: var(--btn-area-hover);
-  transform: translateY(-2px);
-}
-
-.btn-perimeter {
-  background: var(--btn-perimeter-bg);
-  color: white;
-}
-.btn-perimeter:hover {
-  background: var(--btn-perimeter-hover);
-  transform: translateY(-2px);
-}
-
-.btn-clear {
-  background: var(--btn-clear-bg);
-  color: var(--btn-clear-text);
-  border: 1px solid var(--input-border);
-}
-.btn-clear:hover {
-  background: var(--btn-clear-hover);
-}
-
-/* -------- 11. RESULT BOXES -------- */
-.result-box {
-  display: flex;
-  flex-direction: column;
-  background: var(--result-bg);
-  padding: 15px;
-  border-radius: 12px;
-  margin-bottom: 15px;
-  box-shadow: var(--shadow-small);
-  transition: background 0.4s ease;
-}
-
-.result-label {
-  font-size: 0.85rem;
-  color: var(--result-label);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 5px;
-  transition: color 0.3s;
-}
-
-.result-value {
-  font-size: 1.8rem;
-  font-weight: 800;
-  color: var(--result-value);
-  word-break: break-word;
-  transition: color 0.3s;
-}
-
-/* -------- 12. ERROR BOX -------- */
-.error-box {
-  background: var(--error-bg);
-  color: var(--error-text);
-  padding: 12px 16px;
-  border-radius: 10px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  border-left: 4px solid var(--error-text);
-  margin-top: 10px;
-  transition: all 0.4s ease;
-}
-
-.hidden {
-  display: none !important;
-}
-
-/* -------- 13. FOOTER -------- */
-.site-footer {
-  margin-top: 30px;
-  color: var(--footer-text);
-  font-size: 0.85rem;
-  text-align: center;
-  transition: color 0.3s;
-}
-
-/* ============================================================
-   RESPONSIVE DESIGN
-   ============================================================ */
-@media (max-width: 700px) {
-  .site-header h1 {
-    font-size: 1.7rem;
-  }
-
-  .calculator {
-    padding: 18px;
-    gap: 18px;
-  }
-
-  .shape-nav {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-  }
-
-  .shape-btn:last-child {
-    grid-column: span 2;
-  }
-
-  .result-value {
-    font-size: 1.4rem;
-  }
-
-  .input-group label {
-    min-width: 70px;
-    font-size: 0.9rem;
-  }
-
-  .btn {
-    flex: 1 1 100%;
-  }
-
-  .top-bar {
-    justify-content: center;
-  }
-
-  .theme-toggle {
-    padding: 9px 18px;
-  }
-
-  .toggle-text {
-    font-size: 0.85rem;
-  }
-}/* ============================================================
-   CALCULATION HISTORY SECTION
-   ============================================================ */
-
-.history-section {
-  max-width: 950px;
-  width: 100%;
-  background: var(--card-bg);
-  padding: 20px 25px;
-  border-radius: 20px;
-  margin-top: 25px;
-  box-shadow: var(--shadow-main);
-  transition: background 0.4s ease, box-shadow 0.4s ease;
-}
-
-.history-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.history-header h2 {
-  font-size: 1.3rem;
-  color: var(--text-accent);
-  transition: color 0.3s;
-}
-
-.btn-clear-history {
-  background: #e53935;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 30px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.25s ease;
-}
-
-.btn-clear-history:hover {
-  background: #c62828;
-  transform: translateY(-2px);
-}
-
-.history-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  max-height: 350px;
-  overflow-y: auto;
-  padding-right: 5px;
-}
-
-.history-list::-webkit-scrollbar {
-  width: 6px;
-}
-
-.history-list::-webkit-scrollbar-thumb {
-  background: var(--input-border);
-  border-radius: 10px;
-}
-
-.history-item {
-  background: var(--panel-bg);
-  border: 1px solid var(--panel-border);
-  border-radius: 12px;
-  padding: 12px 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-  transition: all 0.25s ease;
-  animation: slideIn 0.3s ease;
-}
-
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.history-item:hover {
-  transform: translateX(4px);
-  border-color: var(--input-focus);
-}
-
-.history-shape-badge {
-  background: var(--shape-btn-active-bg);
-  color: var(--shape-btn-active-text);
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  white-space: nowrap;
-}
-
-.history-details {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  min-width: 150px;
-}
-
-.history-inputs {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-  transition: color 0.3s;
-}
-
-.history-results {
-  font-size: 0.9rem;
-  color: var(--text-primary);
-  font-weight: 600;
-  transition: color 0.3s;
-}
-
-.history-results strong {
-  color: var(--result-value);
-}
-
-.history-time {
-  font-size: 0.75rem;
-  color: var(--footer-text);
-  white-space: nowrap;
-}
-
-.history-empty {
-  color: var(--footer-text);
-  text-align: center;
-  padding: 20px;
-  font-size: 0.95rem;
-  font-style: italic;
-}
-
-@media (max-width: 700px) {
-  .history-section {
-    padding: 15px 18px;
-  }
-
-  .history-header h2 {
-    font-size: 1.1rem;
-  }
-
-  .history-item {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-}/* ============================================================
-   UNIT SELECTOR
-   ============================================================ */
-
-.unit-selector {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background: var(--card-bg);
-  padding: 14px 24px;
-  border-radius: 50px;
-  margin-bottom: 20px;
-  box-shadow: var(--shadow-small);
-  border: 1px solid var(--panel-border);
-  transition: all 0.4s ease;
-}
-
-.unit-selector label {
-  font-weight: 600;
-  color: var(--text-primary);
-  font-size: 0.95rem;
-  transition: color 0.3s;
-}
-
-.unit-selector select {
-  padding: 10px 16px;
-  border: 2px solid var(--input-border);
-  border-radius: 10px;
-  background: var(--input-bg);
-  color: var(--text-primary);
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  outline: none;
-  transition: all 0.25s ease;
-}
-
-.unit-selector select:focus {
-  border-color: var(--input-focus);
-  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.15);
-}
-
-.unit-selector select:hover {
-  border-color: var(--input-focus);
-}
-
-/* Input fields ke saath unit dikhane ke liye */
-.input-with-unit {
-  position: relative;
-  flex: 1;
-  display: flex;
-  align-items: center;
-}
-
-.input-with-unit input {
-  width: 100%;
-  padding-right: 55px !important;
-}
-
-.input-unit-label {
-  position: absolute;
-  right: 16px;
-  color: var(--text-secondary);
-  font-size: 0.85rem;
-  font-weight: 700;
-  pointer-events: none;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  transition: color 0.3s;
-}
-
-/* Result value ke saath unit */
-.result-unit {
-  font-size: 1rem;
-  color: var(--text-secondary);
-  font-weight: 600;
-  margin-left: 6px;
-  transition: color 0.3s;
-}
-
-@media (max-width: 700px) {
-  .unit-selector {
-    flex-direction: column;
-    width: 100%;
-    border-radius: 20px;
-    padding: 14px 20px;
-    gap: 8px;
-  }
-
-  .unit-selector select {
-    width: 100%;
-  }
-}/* ============================================================
-   FORMULA EXPLANATION SECTION
-   ============================================================ */
-
-.explanation-section {
-  max-width: 950px;
-  width: 100%;
-  margin-top: 25px;
-}
-
-.explanation-toggle {
-  width: 100%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border: none;
-  padding: 14px 24px;
-  border-radius: 15px;
-  font-size: 1rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.explanation-toggle:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
-}
-
-body.dark-mode .explanation-toggle {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  box-shadow: 0 4px 15px rgba(245, 87, 108, 0.3);
-}
-
-body.dark-mode .explanation-toggle:hover {
-  box-shadow: 0 8px 25px rgba(245, 87, 108, 0.5);
-}
-
-.explanation-content {
-  background: var(--card-bg);
-  padding: 25px;
-  border-radius: 15px;
-  margin-top: 15px;
-  box-shadow: var(--shadow-main);
-  border-left: 5px solid #667eea;
-  transition: all 0.4s ease;
-  animation: slideDown 0.4s ease;
-}
-
-body.dark-mode .explanation-content {
-  border-left-color: #f5576c;
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-15px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+body.dark-mode .explanation-content::before {
+  background: linear-gradient(to bottom, #f12711, #f5af19);
 }
 
 .explanation-content h3 {
-  color: var(--text-accent);
-  font-size: 1.3rem;
-  margin-bottom: 15px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: color 0.3s;
+  font-size: 1.5rem;
+  color: #1e3c72;
+  margin-bottom: 20px;
+  border-bottom: 2px dashed #e1e8ed;
+  padding-bottom: 10px;
 }
 
-.explanation-body {
-  color: var(--text-primary);
-  line-height: 1.7;
-  font-size: 0.95rem;
-  transition: color 0.3s;
-}
-
-.explanation-body p {
-  margin-bottom: 12px;
-}
-
-.explanation-body strong {
-  color: var(--text-accent);
-  font-weight: 700;
+body.dark-mode .explanation-content h3 {
+  color: #64b5f6;
+  border-bottom-color: #1a5490;
 }
 
 .explanation-formula-box {
-  background: var(--formula-bg);
-  color: var(--formula-text);
-  padding: 14px 18px;
+  background: #f8f9fa;
+  border: 1px solid #e1e8ed;
+  border-left: 4px solid #2a5298;
+  color: #1e3c72;
+  padding: 15px 20px;
   border-radius: 10px;
-  margin: 12px 0;
   font-family: 'Courier New', monospace;
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 700;
-  border-left: 4px solid var(--formula-border);
-  transition: all 0.4s ease;
-  overflow-x: auto;
+  margin: 15px 0;
+  box-shadow: inset 0 2px 5px rgba(0,0,0,0.02);
+}
+
+body.dark-mode .explanation-formula-box {
+  background: rgba(0,0,0,0.2);
+  border-color: #1a5490;
+  border-left-color: #f5af19;
+  color: #e0e0e0;
 }
 
 .explanation-example {
-  background: var(--panel-bg);
-  padding: 14px 18px;
-  border-radius: 10px;
-  margin-top: 12px;
-  border: 1px dashed var(--panel-border);
-  transition: all 0.4s ease;
+  background: #e8f5e9;
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 20px;
+  border: 1px solid #c8e6c9;
+}
+
+body.dark-mode .explanation-example {
+  background: rgba(27, 94, 32, 0.2);
+  border-color: rgba(76, 175, 80, 0.3);
 }
 
 .explanation-example strong {
-  display: block;
-  margin-bottom: 6px;
-}
-
-.explanation-example code {
-  font-family: 'Courier New', monospace;
-  background: var(--input-bg);
-  padding: 2px 8px;
-  border-radius: 5px;
-  font-size: 0.9rem;
-  color: var(--text-primary);
-}
-
-.explanation-list {
-  list-style: none;
-  padding: 0;
-  margin: 10px 0;
-}
-
-.explanation-list li {
-  padding: 8px 0 8px 28px;
-  position: relative;
-  color: var(--text-secondary);
-}
-
-.explanation-list li::before {
-  content: '✓';
-  position: absolute;
-  left: 0;
   color: #2e7d32;
-  font-weight: 900;
+  display: block;
+  margin-bottom: 10px;
   font-size: 1.1rem;
 }
 
-body.dark-mode .explanation-list li::before {
-  color: #4caf50;
+body.dark-mode .explanation-example strong {
+  color: #81c784;
 }
 
-@media (max-width: 700px) {
-  .explanation-content {
-    padding: 18px;
-  }
-
-  .explanation-toggle {
-    padding: 12px 18px;
-    font-size: 0.9rem;
-  }
-
-  .explanation-content h3 {
-    font-size: 1.1rem;
-  }
-
-  .explanation-body {
-    font-size: 0.9rem;
-  }
-
-  .explanation-formula-box {
-    font-size: 0.85rem;
-    padding: 12px 14px;
-  }
-}/* ============================================================
-   SHAPE GROUPS (2D / 3D)
-   ============================================================ */
-
-.shape-group {
-  max-width: 950px;
-  width: 100%;
-  margin-bottom: 20px;
-}
-
-.shape-group-title {
-  font-size: 1rem;
-  color: var(--text-accent);
-  margin-bottom: 12px;
-  text-align: center;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  transition: color 0.3s;
-}
-
-/* 3D shape buttons thoda alag color */
-#shapeNav3D .shape-btn {
-  background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
-  border-color: #fcb69f;
-  color: #8b4513;
-}
-
-#shapeNav3D .shape-btn:hover {
-  background: linear-gradient(135deg, #fcb69f 0%, #ff9a8b 100%);
-  transform: translateY(-2px);
-}
-
-#shapeNav3D .shape-btn.active {
-  background: linear-gradient(135deg, #ff6a00 0%, #ee0979 100%);
-  color: white;
-  border-color: #ee0979;
-}
-
-body.dark-mode #shapeNav3D .shape-btn {
-  background: linear-gradient(135deg, #4a2c2a 0%, #6b3a3a 100%);
-  border-color: #8b4513;
-  color: #ffd7a8;
-}
-
-body.dark-mode #shapeNav3D .shape-btn.active {
-  background: linear-gradient(135deg, #ff6a00 0%, #ee0979 100%);
-  color: white;
-}
-
-/* Result unit label (3D ke liye) */
-.result-value .unit-part {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-}
-
-@media (max-width: 700px) {
-  .shape-group-title {
-    font-size: 0.9rem;
-  }
-}/* Print Button Style */
-.btn-print {
-  background: #8e24aa;
-  color: white;
-}
-.btn-print:hover {
-  background: #6a1b9a;
-  transform: translateY(-2px);
-}/* ============================================================
-   FINAL TOUCHES (Smooth Scrolling & Custom Scrollbar)
-   ============================================================ */
-
-html {
-  scroll-behavior: smooth;
-}
-
-::selection {
-  background: #0d47a1;
-  color: white;
-}
-
-body.dark-mode ::selection {
-  background: #e94560;
-  color: white;
-}
-
-/* Custom Scrollbar (Desktop ke liye) */
-::-webkit-scrollbar {
-  width: 10px;
-}
-::-webkit-scrollbar-track {
-  background: var(--bg-gradient-end);
-}
-::-webkit-scrollbar-thumb {
-  background: var(--text-accent);
-  border-radius: 10px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #0d47a1;
-}
-body.dark-mode ::-webkit-scrollbar-thumb {
-  background: #e94560;
-}/* ============================================================
-   COPY BUTTON STYLING
-   ============================================================ */
-.copy-btn {
-  background: transparent;
-  border: 1px solid var(--panel-border);
-  border-radius: 8px;
-  padding: 6px 10px;
-  font-size: 1.1rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  color: var(--text-primary);
-}
-
-.copy-btn:hover {
-  background: var(--panel-bg);
-  transform: scale(1.1);
-  border-color: var(--text-accent);
-}
-
-.copy-btn:active {
-  transform: scale(0.95);
-}
-
-body.dark-mode .copy-btn {
-  border-color: var(--input-border);
-  color: var(--text-primary);
-}
-body.dark-mode .copy-btn:hover {
-  background: var(--input-bg);
+.explanation-example p {
+  margin: 5px 0;
+  font-weight: 500;
 }
