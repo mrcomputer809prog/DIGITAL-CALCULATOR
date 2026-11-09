@@ -427,7 +427,145 @@ function init() {
   if (closeSciBtn) { closeSciBtn.addEventListener('click', () => { sciPanel.classList.add('hidden'); document.querySelector('main.calculator').classList.remove('hidden'); mainGroups.forEach(g => g.classList.remove('hidden')); if(topBar) topBar.classList.remove('hidden'); if(unitSel) unitSel.classList.remove('hidden'); }); }
 
   setupThemeToggle(); setupHistory(); setupUnitSelector(); setupExplanation(); setupPrintAndCopy();
-  setupUnitConverter(); switchShape('rectangle');
+  setupUnitConverter(); setupRatioCalculator(); setupMobileMenu(); setupPercentageCalculator();  switchShape('rectangle');
+}
+// ==================== 11. RATIO CALCULATOR LOGIC ====================
+function gcd(a, b) {
+  return b === 0 ? a : gcd(b, a % b);
+}
+
+function calculateRatio() {
+  const inputField = document.getElementById('ratioInputs');
+  const resultField = document.getElementById('ratioResult');
+  const inputText = inputField.value.trim();
+
+  if (!inputText) {
+    resultField.textContent = "⚠️ Please enter numbers";
+    return;
+  }
+
+  const nums = inputText.split(/[\s,]+/).map(Number);
+
+  if (nums.some(isNaN) || nums.length < 2) {
+    resultField.textContent = "⚠️ Enter at least 2 valid numbers";
+    return;
+  }
+
+  if (nums.includes(0)) {
+    resultField.textContent = "⚠️ Numbers cannot be zero";
+    return;
+  }
+
+  let currentGcd = nums[0];
+  for (let i = 1; i < nums.length; i++) {
+    currentGcd = gcd(currentGcd, nums[i]);
+  }
+
+  const simplifiedRatio = nums.map(n => n / currentGcd).join(' : ');
+  resultField.textContent = simplifiedRatio;
+}
+
+function setupRatioCalculator() {
+  const ratioBtn = document.getElementById('ratioCalcBtn');
+  const closeRatioBtn = document.getElementById('closeRatioBtn');
+  const ratioPanel = document.getElementById('ratioCalculatorPanel');
+  const mainGroups = document.querySelectorAll('.shape-group');
+  const topBar = document.querySelector('.top-bar');
+  const unitSel = document.querySelector('.unit-selector');
+  const normalCalc = document.querySelector('main.calculator');
+
+  if (ratioBtn) {
+    ratioBtn.addEventListener('click', () => {
+      ratioPanel.classList.remove('hidden');
+      normalCalc.classList.add('hidden');
+      mainGroups.forEach(g => g.classList.add('hidden'));
+      if(topBar) topBar.classList.add('hidden'); 
+      if(unitSel) unitSel.classList.add('hidden');
+      document.getElementById('ratioInputs').value = '';
+      document.getElementById('ratioResult').textContent = '—';
+    });
+  }
+
+  if (closeRatioBtn) {
+    closeRatioBtn.addEventListener('click', () => {
+      ratioPanel.classList.add('hidden');
+      normalCalc.classList.remove('hidden');
+      mainGroups.forEach(g => g.classList.remove('hidden'));
+      if(topBar) topBar.classList.remove('hidden'); 
+      if(unitSel) unitSel.classList.remove('hidden');
+    });
+  }
+}// ==================== 13. MOBILE MENU LOGIC ====================
+function setupMobileMenu() {
+  const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+  const moreToolsMenu = document.getElementById('moreToolsMenu');
+
+  if (mobileMenuBtn && moreToolsMenu) {
+    mobileMenuBtn.addEventListener('click', (e) => {
+      e.stopPropagation(); // Click ko bahar jane se roke
+      moreToolsMenu.classList.toggle('show-menu');
+    });
+
+    // Agar user screen par kisi aur jagah click kare to menu band ho jaye
+    document.addEventListener('click', (e) => {
+      if (!moreToolsMenu.contains(e.target) && e.target !== mobileMenuBtn) {
+        moreToolsMenu.classList.remove('show-menu');
+      }
+    });
+  }
+}
+// ==================== 12. PERCENTAGE CALCULATOR LOGIC ====================
+function calculatePercentage() {
+  const obtained = parseFloat(document.getElementById('percObtained').value);
+  const total = parseFloat(document.getElementById('percTotal').value);
+  const resultField = document.getElementById('percentageResult');
+
+  if (isNaN(obtained) || isNaN(total) || total === 0) {
+    resultField.textContent = "⚠️ Enter valid numbers";
+    resultField.style.color = "#ff4b2b";
+    return;
+  }
+
+  const percentage = (obtained / total) * 100;
+  resultField.textContent = Number(percentage.toFixed(2)) + "%";
+  resultField.style.color = "var(--text-accent)";
+}
+
+function setupPercentageCalculator() {
+  const percBtn = document.getElementById('percentageCalcBtn');
+  const closePercBtn = document.getElementById('closePercentageBtn');
+  const percPanel = document.getElementById('percentageCalculatorPanel');
+  const mainGroups = document.querySelectorAll('.shape-group');
+  const topBar = document.querySelector('.top-bar');
+  const unitSel = document.querySelector('.unit-selector');
+  const normalCalc = document.querySelector('main.calculator');
+
+  if (percBtn) {
+    percBtn.addEventListener('click', () => {
+      percPanel.classList.remove('hidden');
+      normalCalc.classList.add('hidden');
+      mainGroups.forEach(g => g.classList.add('hidden'));
+      if(topBar) topBar.classList.add('hidden'); 
+      if(unitSel) unitSel.classList.add('hidden');
+      document.getElementById('percObtained').value = '';
+      document.getElementById('percTotal').value = '';
+      document.getElementById('percentageResult').textContent = '—';
+      
+      // Mobile menu ko band karne ke liye
+      const moreToolsMenu = document.getElementById('moreToolsMenu');
+      if(moreToolsMenu) moreToolsMenu.classList.remove('show-menu');
+    });
+  }
+
+  if (closePercBtn) {
+    closePercBtn.addEventListener('click', () => {
+      percPanel.classList.add('hidden');
+      normalCalc.classList.remove('hidden');
+      mainGroups.forEach(g => g.classList.remove('hidden'));
+      if(topBar) topBar.classList.remove('hidden'); 
+      if(unitSel) unitSel.classList.remove('hidden');
+    });
+  }
 }
 
 init();

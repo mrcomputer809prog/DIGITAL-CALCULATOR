@@ -69,17 +69,71 @@
     <p class="description">A simple, accurate and professional calculator for 2D and 3D geometric shapes.</p>
   </header>
 
-  <!-- ================= CALCULATOR MODES BUTTONS ================= -->
-  <div style="text-align: center; margin-bottom: 20px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
-    <button id="sciModeBtn" class="btn" style="background: linear-gradient(135deg, #8e2de2, #4a00e0); color: white; padding: 15px 30px; font-size: 1.1rem; border-radius: 30px; box-shadow: 0 10px 20px rgba(142, 45, 226, 0.4);">
+   <!-- ================= CALCULATOR MODES (Responsive) ================= -->
+  <div class="modes-container">
+    
+    <!-- Desktop aur Mobile par hamesha dikhne wala main button -->
+    <button id="sciModeBtn" class="btn mode-btn" style="background: linear-gradient(135deg, #8e2de2, #4a00e0); color: white;">
       🧮 Scientific Calculator
     </button>
-    
-    <button id="unitConvBtn" class="btn" style="background: linear-gradient(135deg, #11998e, #38ef7d); color: white; padding: 15px 30px; font-size: 1.1rem; border-radius: 30px; box-shadow: 0 10px 20px rgba(17, 153, 142, 0.4);">
-      📏 Unit Converter
-    </button>
-  </div>
 
+    <!-- Mobile ke liye 3 Dots ka Button (Desktop par hide rahega) -->
+    <button id="mobileMenuBtn" class="btn mobile-menu-btn">⋮ More Tools</button>
+
+    <!-- Baqi Tools ka Dropdown (Desktop par direct dikhega, Mobile par menu mein) -->
+    <div class="more-tools-menu" id="moreToolsMenu">
+      <button id="unitConvBtn" class="btn" style="background: linear-gradient(135deg, #11998e, #38ef7d); color: white;">
+        📏 Unit Converter
+      </button>
+      <button id="ratioCalcBtn" class="btn" style="background: linear-gradient(135deg, #f12711, #f5af19); color: white;">
+        ⚖️ Ratio Calculator
+      </button>
+      <!-- Naya Percentage Button -->
+      <button id="percentageCalcBtn" class="btn" style="background: linear-gradient(135deg, #00b4db, #0083b0); color: white;">
+        📊 Percentage
+      </button>
+    </div>
+  <!-- ================= RATIO CALCULATOR PANEL ================= -->
+  <div id="ratioCalculatorPanel" class="calculator hidden" style="flex-direction: column; align-items: center; justify-content: center; max-width: 600px; margin: 0 auto 30px auto;">
+    <h2 style="color: var(--text-accent); margin-bottom: 20px;">⚖️ Ratio Calculator</h2>
+    
+    <div style="display: flex; gap: 10px; width: 100%; margin-bottom: 15px;">
+      <input type="text" id="ratioInputs" placeholder="e.g. 10, 5, 20 (comma se alag karein)" style="flex: 1; padding: 15px; border-radius: 12px; border: 2px solid var(--input-border); background: var(--input-bg); color: var(--text-primary); font-size: 1.1rem; outline: none;">
+    </div>
+    
+    <button class="btn btn-area" onclick="calculateRatio()" style="width: 100%; margin-bottom: 15px;">Calculate Ratio</button>
+    
+    <div style="width: 100%; padding: 20px; background: var(--result-bg); border-radius: 12px; border: 1px solid var(--glass-border); text-align: center;">
+      <span style="font-size: 0.9rem; color: var(--text-secondary); text-transform: uppercase; font-weight: bold;">Simplest Ratio:</span>
+      <div id="ratioResult" style="font-size: 2rem; font-weight: 800; color: var(--text-accent); margin-top: 10px;">—</div>
+    </div>
+    
+    <button id="closeRatioBtn" class="btn" style="margin-top: 25px; background: #ff4b2b; color: white; width: 100%;">Close Calculator</button>
+  </div> 
+ <!-- ================= PERCENTAGE CALCULATOR PANEL ================= -->
+  <div id="percentageCalculatorPanel" class="calculator hidden" style="flex-direction: column; align-items: center; justify-content: center; max-width: 600px; margin: 0 auto 30px auto;">
+    <h2 style="color: var(--text-accent); margin-bottom: 20px;">📊 Percentage Calculator</h2>
+    
+    <div style="display: flex; gap: 15px; width: 100%; flex-wrap: wrap; margin-bottom: 20px;">
+      <div style="flex: 1; min-width: 200px;">
+        <label style="font-weight: 600; font-size: 0.9rem; margin-bottom: 5px; display: block;">Obtained Numbers</label>
+        <input type="number" id="percObtained" placeholder="e.g. 25" style="width: 100%; padding: 15px; border-radius: 12px; border: 2px solid var(--input-border); background: var(--input-bg); color: var(--text-primary); font-size: 1.1rem; outline: none;">
+      </div>
+      <div style="flex: 1; min-width: 200px;">
+        <label style="font-weight: 600; font-size: 0.9rem; margin-bottom: 5px; display: block;">Total Numbers</label>
+        <input type="number" id="percTotal" placeholder="e.g. 100" style="width: 100%; padding: 15px; border-radius: 12px; border: 2px solid var(--input-border); background: var(--input-bg); color: var(--text-primary); font-size: 1.1rem; outline: none;">
+      </div>
+    </div>
+    
+    <button class="btn btn-area" onclick="calculatePercentage()" style="width: 100%; margin-bottom: 15px;">Calculate Percentage</button>
+    
+    <div style="width: 100%; padding: 20px; background: var(--result-bg); border-radius: 12px; border: 1px solid var(--glass-border); text-align: center;">
+      <span style="font-size: 0.9rem; color: var(--text-secondary); text-transform: uppercase; font-weight: bold;">Result:</span>
+      <div id="percentageResult" style="font-size: 2.5rem; font-weight: 800; color: var(--text-accent); margin-top: 10px;">—</div>
+    </div>
+    
+    <button id="closePercentageBtn" class="btn" style="margin-top: 25px; background: #ff4b2b; color: white; width: 100%;">Close Calculator</button>
+  </div>
   <!-- ================= UNIT CONVERTER PANEL ================= -->
   <div id="unitConverterPanel" class="calculator hidden" style="flex-direction: column; align-items: center; justify-content: center; max-width: 600px; margin: 0 auto 30px auto;">
     <h2 style="color: var(--text-accent); margin-bottom: 20px;">📏 Universal Unit Converter</h2>

@@ -351,4 +351,103 @@ body.dark-mode .sci-btn:hover { background: rgba(255, 255, 255, 0.1); }
     padding: 12px 5px !important;
     font-size: 1rem !important;
   }
+}/* ============================================================
+   RESPONSIVE MODES MENU (Desktop & Mobile)
+   ============================================================ */
+
+.modes-container {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 950px;
+}
+
+.mode-btn, .more-tools-menu .btn {
+  padding: 15px 25px;
+  font-size: 1rem;
+  border-radius: 30px;
+  font-weight: 700;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+.mode-btn:hover, .more-tools-menu .btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+/* Desktop par tools direct nazar aane chahiye */
+.more-tools-menu {
+  display: flex;
+  gap: 12px;
+}
+
+/* Mobile ka menu button desktop par hide rahega */
+.mobile-menu-btn {
+  display: none;
+  background: var(--glass-bg);
+  color: var(--text-primary);
+  border: 1px solid var(--glass-border);
+  font-size: 1.5rem;
+  padding: 10px 20px;
+}
+
+/* === MOBILE VIEW (Max Width 768px) === */
+@media (max-width: 768px) {
+  .modes-container {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .mode-btn {
+    flex: 1;
+    font-size: 0.95rem;
+    padding: 12px 10px;
+  }
+
+  /* Mobile par 3 dots ko dikhayein */
+  .mobile-menu-btn {
+    display: block;
+  }
+
+  /* Dropdown Menu ka design */
+  .more-tools-menu {
+    display: none; /* Shuru mein chhupa hua */
+    position: absolute;
+    top: 100%;
+    right: 10px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(15px);
+    border: 1px solid var(--glass-border);
+    border-radius: 15px;
+    padding: 10px;
+    flex-direction: column;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    z-index: 1000;
+    margin-top: 10px;
+    min-width: 200px;
+  }
+
+  /* Jab mobile menu open ho */
+  .more-tools-menu.show-menu {
+    display: flex;
+    animation: fadeInDown 0.3s ease;
+  }
+
+  .more-tools-menu .btn {
+    width: 100%;
+    text-align: left;
+    justify-content: flex-start;
+    padding: 12px 15px;
+    font-size: 0.9rem;
+  }
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
