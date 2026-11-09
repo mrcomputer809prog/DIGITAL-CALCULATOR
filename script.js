@@ -257,13 +257,22 @@ function playClick() {
 function speakResult(text) {
   if (!soundEnabled) return;
   if ('speechSynthesis' in window) {
+    // Pehle se chal rahi koi bhi awaaz ko rok dein
     window.speechSynthesis.cancel();
+    
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'en-US'; utterance.rate = 0.85; utterance.pitch = 1.0; utterance.volume = 1.0;
-    setTimeout(() => { window.speechSynthesis.speak(utterance); }, 300);
+    utterance.lang = 'en-US'; 
+    utterance.rate = 0.9;    // Speed thodi tez ki taake natural lage
+    utterance.pitch = 1.2;   // Pitch thoda high kiya taake awaaz clear aur pyari lage (bhaari na lage)
+    utterance.volume = 1.0;
+    
+    // Mobile browsers mein awaaz start hone mein thoda time lagta hai
+    // Isliye hum 500 milliseconds ka delay de rahe hain
+    setTimeout(() => { 
+      window.speechSynthesis.speak(utterance); 
+    }, 500);
   }
 }
-
 // ==================== 5. RENDER & VALIDATE ====================
 function renderInputs(shapeKey) {
   const shape = SHAPES[shapeKey];

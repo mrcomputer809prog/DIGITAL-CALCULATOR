@@ -288,4 +288,61 @@ body.dark-mode .sci-btn:hover { background: rgba(255, 255, 255, 0.1); }
   .btn { flex: 1 1 100%; }
   .top-bar { justify-content: center; }
   .history-item { flex-direction: column; align-items: flex-start; gap: 8px; }
+}/* ============================================================
+   MOBILE PROFESSIONAL LAYOUT FIX
+   ============================================================ */
+@media (max-width: 768px) {
+  /* Main container ko flex-column mein badlein mobile par */
+  body {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+  }
+
+  /* Calculator (Inputs + Results) ko sabse upar laayein */
+  main.calculator {
+    order: -1; /* Ye isko sabse upar bhej dega */
+    margin-top: 10px;
+    margin-bottom: 20px;
+    padding: 15px;
+  }
+
+  /* Shapes wale buttons ko thoda neeche bhej dein */
+  .shape-group {
+    order: 2; 
+  }
+
+  /* Inputs ko mobile par zyada jagah dein */
+  .input-panel, .result-panel {
+    flex: 1 1 100%;
+  }
+
+  /* Result boxes ko mobile par side-by-side (aamne-saamne) karein */
+  .result-panel {
+    flex-direction: row;
+    gap: 10px;
+  }
+  .result-box {
+    flex: 1;
+    padding: 10px;
+  }
+  .result-value {
+    font-size: 1.4rem;
+  }
+
+  /* History aur Explanation ko sabse aakhir mein rakhein */
+  .history-section { order: 3; }
+  .explanation-section { order: 4; }
+  .unit-selector { order: 1; }
+
+  /* Top bar (Buttons) ko chota karein taake jagah bache */
+  .top-bar {
+    gap: 5px;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+  .theme-toggle {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+  }
 }
