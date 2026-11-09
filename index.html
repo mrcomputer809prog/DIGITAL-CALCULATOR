@@ -12,7 +12,7 @@
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0d47a1">
 
-  <!-- Security Header (Bina kisi Google Translate ke) -->
+  <!-- Security Header -->
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; object-src 'none'; base-uri 'self';">
 
   <link rel="stylesheet" href="style.css">
@@ -43,7 +43,7 @@
       <option value="ja">🇯🇵 Japanese</option>
     </select>
 
-    <!-- Install App Button (Shuru mein hide rahega) -->
+    <!-- Install App Button -->
     <button id="installAppBtn" class="theme-toggle hidden" style="background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%); color: white; border: none; margin-right: 10px;">
       <span class="toggle-icon">📲</span>
       <span class="toggle-text">Install App</span>
@@ -69,31 +69,31 @@
     <p class="description">A simple, accurate and professional calculator for 2D and 3D geometric shapes.</p>
   </header>
 
-   <!-- ================= CALCULATOR MODES BUTTONS ================= -->
+  <!-- ================= CALCULATOR MODES BUTTONS ================= -->
   <div style="text-align: center; margin-bottom: 20px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
     <button id="sciModeBtn" class="btn" style="background: linear-gradient(135deg, #8e2de2, #4a00e0); color: white; padding: 15px 30px; font-size: 1.1rem; border-radius: 30px; box-shadow: 0 10px 20px rgba(142, 45, 226, 0.4);">
       🧮 Scientific Calculator
     </button>
     
-    <!-- Naya Unit Converter Button -->
     <button id="unitConvBtn" class="btn" style="background: linear-gradient(135deg, #11998e, #38ef7d); color: white; padding: 15px 30px; font-size: 1.1rem; border-radius: 30px; box-shadow: 0 10px 20px rgba(17, 153, 142, 0.4);">
       📏 Unit Converter
     </button>
   </div>
-    <!-- ================= UNIT CONVERTER PANEL (Hidden by default) ================= -->
+
+  <!-- ================= UNIT CONVERTER PANEL ================= -->
   <div id="unitConverterPanel" class="calculator hidden" style="flex-direction: column; align-items: center; justify-content: center; max-width: 600px; margin: 0 auto 30px auto;">
     <h2 style="color: var(--text-accent); margin-bottom: 20px;">📏 Universal Unit Converter</h2>
     
-    <!-- Category Selector -->
     <div style="display: flex; gap: 10px; margin-bottom: 20px; width: 100%;">
       <select id="convCategory" class="unit-selector select" style="flex: 1; padding: 12px; border-radius: 12px; font-weight: bold;" onchange="updateConverterUnits()">
         <option value="length">Length</option>
         <option value="weight">Weight</option>
         <option value="temp">Temperature</option>
+        <option value="data">Data Storage</option>
+        <option value="time">Time</option>
       </select>
     </div>
 
-    <!-- Converter Inputs -->
     <div style="display: flex; gap: 15px; width: 100%; flex-wrap: wrap; align-items: center;">
       <div style="flex: 1; min-width: 200px;">
         <input type="number" id="convInput" placeholder="Enter value" style="width: 100%; padding: 15px; border-radius: 12px; border: 2px solid var(--input-border); background: var(--input-bg); color: var(--text-primary); font-size: 1.2rem; outline: none;" oninput="convertUnit()">
@@ -117,39 +117,52 @@
     <input type="text" id="sciDisplay" readonly style="width: 100%; max-width: 400px; padding: 20px; font-size: 2rem; text-align: right; border-radius: 15px; border: 2px solid var(--glass-border); background: var(--input-bg); color: var(--text-primary); margin-bottom: 20px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.1);">
     
     <div id="sciButtons" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; width: 100%; max-width: 400px;">
+      <!-- Row 1 -->
       <button class="sci-btn" onclick="sciInput('sin(')">sin</button>
       <button class="sci-btn" onclick="sciInput('cos(')">cos</button>
       <button class="sci-btn" onclick="sciInput('tan(')">tan</button>
       <button class="sci-btn" onclick="sciInput('π')">π</button>
       
+      <!-- Row 2 (Naye Buttons) -->
+      <button class="sci-btn" onclick="sciInput('asin(')">sin⁻¹</button>
+      <button class="sci-btn" onclick="sciInput('acos(')">cos⁻¹</button>
+      <button class="sci-btn" onclick="sciInput('atan(')">tan⁻¹</button>
+      <button class="sci-btn" onclick="sciInput('!')">!</button>
+      
+      <!-- Row 3 -->
       <button class="sci-btn" onclick="sciInput('log(')">log</button>
       <button class="sci-btn" onclick="sciInput('√(')">√</button>
       <button class="sci-btn" onclick="sciInput('^2')">x²</button>
       <button class="sci-btn" onclick="sciInput('^3')">x³</button>
       
+      <!-- Row 4 -->
       <button class="sci-btn" onclick="sciInput('(')">(</button>
       <button class="sci-btn" onclick="sciInput(')')">)</button>
       <button class="sci-btn" onclick="sciClear()" style="color: #ff4b2b;">C</button>
       <button class="sci-btn" onclick="sciDelete()" style="color: #ff4b2b;">⌫</button>
       
+      <!-- Row 5 -->
       <button class="sci-btn num-btn" onclick="sciInput('7')">7</button>
       <button class="sci-btn num-btn" onclick="sciInput('8')">8</button>
       <button class="sci-btn num-btn" onclick="sciInput('9')">9</button>
       <button class="sci-btn" onclick="sciInput('/')" style="color: #0d47a1;">÷</button>
       
+      <!-- Row 6 -->
       <button class="sci-btn num-btn" onclick="sciInput('4')">4</button>
       <button class="sci-btn num-btn" onclick="sciInput('5')">5</button>
       <button class="sci-btn num-btn" onclick="sciInput('6')">6</button>
       <button class="sci-btn" onclick="sciInput('*')" style="color: #0d47a1;">×</button>
       
+      <!-- Row 7 -->
       <button class="sci-btn num-btn" onclick="sciInput('1')">1</button>
       <button class="sci-btn num-btn" onclick="sciInput('2')">2</button>
       <button class="sci-btn num-btn" onclick="sciInput('3')">3</button>
       <button class="sci-btn" onclick="sciInput('-')" style="color: #0d47a1;">−</button>
       
+      <!-- Row 8 -->
       <button class="sci-btn num-btn" onclick="sciInput('0')">0</button>
       <button class="sci-btn num-btn" onclick="sciInput('.')">.</button>
-      <button class="sci-btn" onclick="sciCalculate()" style="background: #2e7d32; color: white; grid-column: span 1;">=</button>
+      <button class="sci-btn" onclick="sciCalculate()" style="background: #2e7d32; color: white; grid-column: span 2;">=</button>
       <button class="sci-btn" onclick="sciInput('+')" style="color: #0d47a1;">+</button>
     </div>
     <button id="closeSciBtn" class="btn" style="margin-top: 20px; background: #ff4b2b; color: white; width: 100%; max-width: 400px;">Close Calculator</button>
@@ -182,6 +195,9 @@
       <button class="shape-btn" data-shape="cylinder">🥫 Cylinder</button>
       <button class="shape-btn" data-shape="cone">🍦 Cone</button>
       <button class="shape-btn" data-shape="pyramid">🔺 Square Pyramid</button>
+      <!-- Naye 3D Shapes -->
+      <button class="shape-btn" data-shape="hemisphere">🌗 Hemisphere</button>
+      <button class="shape-btn" data-shape="torus">🍩 Torus</button>
     </nav>
   </div>
 
@@ -198,7 +214,7 @@
     </select>
   </div>
 
-  <!-- ================= CALCULATOR ================= -->
+  <!-- ================= CALCULATOR MAIN ================= -->
   <main class="calculator">
     <section class="input-panel">
       <div class="formula-hint" id="formulaHint">Select a shape to see its formula</div>

@@ -1,104 +1,8 @@
 /* ============================================================
-   DIGITAL CALCULATOR - FINAL 100% PERFECT SCRIPT
+   DIGITAL CALCULATOR -
    ============================================================ */
 
 // ==================== 1. SHAPES DATABASE ====================
-// ==================== UNIT CONVERTER LOGIC ====================
-const CONVERSION_DATA = {
-  length: {
-    units: { m: 'Meter (m)', km: 'Kilometer (km)', cm: 'Centimeter (cm)', mm: 'Millimeter (mm)', in: 'Inch (in)', ft: 'Foot (ft)', mi: 'Mile (mi)' },
-    rates: { m: 1, km: 1000, cm: 0.01, mm: 0.001, in: 0.0254, ft: 0.3048, mi: 1609.34 }
-  },
-  weight: {
-    units: { kg: 'Kilogram (kg)', g: 'Gram (g)', mg: 'Milligram (mg)', lb: 'Pound (lb)', oz: 'Ounce (oz)' },
-    rates: { kg: 1, g: 0.001, mg: 0.000001, lb: 0.453592, oz: 0.0283495 }
-  },
-  temp: {
-    units: { C: 'Celsius (°C)', F: 'Fahrenheit (°F)', K: 'Kelvin (K)' }
-  }
-};
-
-function updateConverterUnits() {
-  const category = document.getElementById('convCategory').value;
-  const fromSelect = document.getElementById('convFrom');
-  const toSelect = document.getElementById('convTo');
-  
-  fromSelect.innerHTML = '';
-  toSelect.innerHTML = '';
-  
-  const units = CONVERSION_DATA[category].units;
-  for (let key in units) {
-    fromSelect.innerHTML += `<option value="${key}">${units[key]}</option>`;
-    toSelect.innerHTML += `<option value="${key}">${units[key]}</option>`;
-  }
-  
-  if (category === 'length') toSelect.value = 'km';
-  if (category === 'weight') toSelect.value = 'g';
-  if (category === 'temp') toSelect.value = 'F';
-  
-  convertUnit();
-}
-
-function convertUnit() {
-  const category = document.getElementById('convCategory').value;
-  const inputVal = parseFloat(document.getElementById('convInput').value);
-  const fromUnit = document.getElementById('convFrom').value;
-  const toUnit = document.getElementById('convTo').value;
-  const outputField = document.getElementById('convOutput');
-
-  if (isNaN(inputVal)) { outputField.value = ''; return; }
-
-  let result = 0;
-
-  if (category === 'temp') {
-    let celsius;
-    if (fromUnit === 'C') celsius = inputVal;
-    else if (fromUnit === 'F') celsius = (inputVal - 32) * 5/9;
-    else if (fromUnit === 'K') celsius = inputVal - 273.15;
-
-    if (toUnit === 'C') result = celsius;
-    else if (toUnit === 'F') result = (celsius * 9/5) + 32;
-    else if (toUnit === 'K') result = celsius + 273.15;
-  } else {
-    const rates = CONVERSION_DATA[category].rates;
-    const baseValue = inputVal * rates[fromUnit];
-    result = baseValue / rates[toUnit];
-  }
-
-  outputField.value = Number(result.toFixed(5)).toString();
-}
-
-function setupUnitConverter() {
-  const convBtn = document.getElementById('unitConvBtn');
-  const closeConvBtn = document.getElementById('closeConvBtn');
-  const convPanel = document.getElementById('unitConverterPanel');
-  const mainGroups = document.querySelectorAll('.shape-group');
-  const topBar = document.querySelector('.top-bar');
-  const unitSel = document.querySelector('.unit-selector');
-  const normalCalc = document.querySelector('main.calculator');
-
-  if (convBtn) {
-    convBtn.addEventListener('click', () => {
-      convPanel.classList.remove('hidden');
-      normalCalc.classList.add('hidden');
-      mainGroups.forEach(g => g.classList.add('hidden'));
-      if(topBar) topBar.classList.add('hidden'); 
-      if(unitSel) unitSel.classList.add('hidden');
-      updateConverterUnits();
-    });
-  }
-
-  if (closeConvBtn) {
-    closeConvBtn.addEventListener('click', () => {
-      convPanel.classList.add('hidden');
-      normalCalc.classList.remove('hidden');
-      mainGroups.forEach(g => g.classList.remove('hidden'));
-      if(topBar) topBar.classList.remove('hidden'); 
-      if(unitSel) unitSel.classList.remove('hidden');
-    });
-  }
-}
-// ==============================================================
 const SHAPES = {
   rectangle: {
     type: '2D', name: 'Rectangle', formula: 'Area = L × W | Perimeter = 2 × (L + W)',
@@ -196,28 +100,45 @@ const SHAPES = {
     fields: [{ key: 'base', label: 'Base', placeholder: 'e.g. 6' }, { key: 'height', label: 'Height', placeholder: 'e.g. 4' }, { key: 'slant', label: 'Slant', placeholder: 'e.g. 5' }],
     area: (v) => (1 / 3) * v.base * v.base * v.height, perimeter: (v) => v.base * v.base + 2 * v.base * v.slant,
     explanation: { title: '🔺 Pyramid', howItWorks: 'Square base.', areaExplained: '(1/3)b²h', perimeterExplained: 'b²+2bl', example: { inputs: '6, 4, 5', area: '48 cm³', perimeter: '96 cm²' } }
+  },
+  hemisphere: {
+    type: '3D', name: 'Hemisphere', formula: 'Volume = (2/3)πr³ | Surface Area = 3πr²',
+    fields: [{ key: 'radius', label: 'Radius', placeholder: 'e.g. 5' }],
+    area: (v) => (2 / 3) * Math.PI * v.radius * v.radius * v.radius, 
+    perimeter: (v) => 3 * Math.PI * v.radius * v.radius,
+    explanation: { title: '🌗 Hemisphere', howItWorks: 'Half sphere.', areaExplained: '(2/3)πr³', perimeterExplained: '3πr²', example: { inputs: '5 cm', area: '261.80 cm³', perimeter: '235.62 cm²' } }
+  },
+  torus: {
+    type: '3D', name: 'Torus', formula: 'Volume = 2π²Rr² | Surface Area = 4π²Rr',
+    fields: [{ key: 'R', label: 'Major Radius (R)', placeholder: 'e.g. 10' }, { key: 'r', label: 'Minor Radius (r)', placeholder: 'e.g. 2' }],
+    area: (v) => 2 * Math.PI * Math.PI * v.R * v.r * v.r, 
+    perimeter: (v) => 4 * Math.PI * Math.PI * v.R * v.r,
+    explanation: { title: '🍩 Torus', howItWorks: 'Donut shape.', areaExplained: '2π²Rr²', perimeterExplained: '4π²Rr', example: { inputs: 'R=10, r=2', area: '789.56 cm³', perimeter: '789.56 cm²' } }
   }
 };
 
-// ==================== 2. SCIENTIFIC CALCULATOR ====================
-let sciExpression = "";
-function updateSciDisplay() { const d = document.getElementById('sciDisplay'); if (d) d.value = sciExpression; }
-function sciInput(val) { sciExpression += val; updateSciDisplay(); }
-function sciClear() { sciExpression = ""; updateSciDisplay(); }
-function sciDelete() { sciExpression = sciExpression.slice(0, -1); updateSciDisplay(); }
-function sciCalculate() {
-  try {
-    let evalString = sciExpression
-      .replace(/sin\(/g, 'Math.sin(').replace(/cos\(/g, 'Math.cos(').replace(/tan\(/g, 'Math.tan(')
-      .replace(/log\(/g, 'Math.log10(').replace(/√\(/g, 'Math.sqrt(')
-      .replace(/π/g, 'Math.PI').replace(/\^/g, '**');
-    let result = Function('"use strict";return (' + evalString + ')')();
-    sciExpression = (isNaN(result) || !isFinite(result)) ? "Error" : (Number.isInteger(result) ? result.toString() : result.toFixed(4).replace(/\.?0+$/, ''));
-    updateSciDisplay();
-  } catch (error) { sciExpression = "Error"; updateSciDisplay(); }
-}
-
-// ==================== 3. DOM & GLOBAL VARIABLES ====================
+// ==================== 2. UNIT CONVERTER DATABASE ====================
+const CONVERSION_DATA = {
+  length: {
+    units: { m: 'Meter (m)', km: 'Kilometer (km)', cm: 'Centimeter (cm)', mm: 'Millimeter (mm)', in: 'Inch (in)', ft: 'Foot (ft)', mi: 'Mile (mi)' },
+    rates: { m: 1, km: 1000, cm: 0.01, mm: 0.001, in: 0.0254, ft: 0.3048, mi: 1609.34 }
+  },
+  weight: {
+    units: { kg: 'Kilogram (kg)', g: 'Gram (g)', mg: 'Milligram (mg)', lb: 'Pound (lb)', oz: 'Ounce (oz)' },
+    rates: { kg: 1, g: 0.001, mg: 0.000001, lb: 0.453592, oz: 0.0283495 }
+  },
+  temp: {
+    units: { C: 'Celsius (°C)', F: 'Fahrenheit (°F)', K: 'Kelvin (K)' }
+  },
+  data: {
+    units: { B: 'Bytes (B)', KB: 'Kilobytes (KB)', MB: 'Megabytes (MB)', GB: 'Gigabytes (GB)', TB: 'Terabytes (TB)' },
+    rates: { B: 1, KB: 1024, MB: 1048576, GB: 1073741824, TB: 1099511627776 }
+  },
+  time: {
+    units: { sec: 'Seconds', min: 'Minutes', hr: 'Hours', day: 'Days' },
+    rates: { sec: 1, min: 60, hr: 3600, day: 86400 }
+  }
+};// ==================== 3. DOM & GLOBAL VARIABLES ====================
 const inputFieldsDiv = document.getElementById('inputFields');
 const formulaHintEl = document.getElementById('formulaHint');
 const resultAreaEl = document.getElementById('resultArea');
@@ -232,8 +153,10 @@ let currentShape = 'rectangle';
 let explanationVisible = false;
 let soundEnabled = true;
 let audioCtx = null;
+let sciExpression = "";
+let deferredPrompt;
 
-// ==================== 4. HELPERS ====================
+// ==================== 4. HELPER FUNCTIONS ====================
 function hideError() { errorBox.classList.add('hidden'); }
 function showError(msg) { errorTextEl.textContent = msg; errorBox.classList.remove('hidden'); }
 function resetResults() { resultAreaEl.textContent = '—'; resultPerimeterEl.textContent = '—'; hideError(); }
@@ -257,23 +180,12 @@ function playClick() {
 function speakResult(text) {
   if (!soundEnabled) return;
   if ('speechSynthesis' in window) {
-    // Pehle se chal rahi koi bhi awaaz ko rok dein
     window.speechSynthesis.cancel();
-    
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'en-US'; 
-    utterance.rate = 0.9;    // Speed thodi tez ki taake natural lage
-    utterance.pitch = 1.2;   // Pitch thoda high kiya taake awaaz clear aur pyari lage (bhaari na lage)
-    utterance.volume = 1.0;
-    
-    // Mobile browsers mein awaaz start hone mein thoda time lagta hai
-    // Isliye hum 500 milliseconds ka delay de rahe hain
-    setTimeout(() => { 
-      window.speechSynthesis.speak(utterance); 
-    }, 500);
+    utterance.lang = 'en-US'; utterance.rate = 0.9; utterance.pitch = 1.2; utterance.volume = 1.0;
+    setTimeout(() => { window.speechSynthesis.speak(utterance); }, 400);
   }
-}
-// ==================== 5. RENDER & VALIDATE ====================
+}// ==================== 5. SHAPE CALCULATOR LOGIC ====================
 function renderInputs(shapeKey) {
   const shape = SHAPES[shapeKey];
   if (!shape) return;
@@ -303,7 +215,6 @@ function readAndValidateInputs() {
   hideError(); return values;
 }
 
-// ==================== 6. CALCULATIONS ====================
 function calculateArea() {
   const values = readAndValidateInputs(); if (!values) return;
   const shape = SHAPES[currentShape]; const is3D = shape.type === '3D';
@@ -358,15 +269,74 @@ function switchShape(shapeKey) {
   if (explanationVisible) renderExplanation();
 }
 
-// ==================== 7. UI FEATURES ====================
+// ==================== 6. SCIENTIFIC CALCULATOR LOGIC ====================
+function updateSciDisplay() { const d = document.getElementById('sciDisplay'); if (d) d.value = sciExpression; }
+function sciInput(val) { sciExpression += val; updateSciDisplay(); }
+function sciClear() { sciExpression = ""; updateSciDisplay(); }
+function sciDelete() { sciExpression = sciExpression.slice(0, -1); updateSciDisplay(); }
+function sciCalculate() {
+  try {
+    function factorial(n) { if (n === 0 || n === 1) return 1; let r = 1; for (let i = 2; i <= n; i++) r *= i; return r; }
+    
+    let evalString = sciExpression
+      .replace(/sin⁻¹\(/g, 'Math.asin(').replace(/asin\(/g, 'Math.asin(')
+      .replace(/cos⁻¹\(/g, 'Math.acos(').replace(/acos\(/g, 'Math.acos(')
+      .replace(/tan⁻¹\(/g, 'Math.atan(').replace(/atan\(/g, 'Math.atan(')
+      .replace(/sin\(/g, 'Math.sin(').replace(/cos\(/g, 'Math.cos(').replace(/tan\(/g, 'Math.tan(')
+      .replace(/log\(/g, 'Math.log10(').replace(/√\(/g, 'Math.sqrt(')
+      .replace(/π/g, 'Math.PI').replace(/\^/g, '**');
+
+    evalString = evalString.replace(/(\d+)!/g, 'factorial($1)');
+
+    let result = Function('"use strict";return (' + evalString + ', factorial)')(factorial);
+    
+    sciExpression = (isNaN(result) || !isFinite(result)) ? "Error" : (Number.isInteger(result) ? result.toString() : result.toFixed(4).replace(/\.?0+$/, ''));
+    updateSciDisplay();
+  } catch (error) { sciExpression = "Error"; updateSciDisplay(); }
+}// ==================== 7. UNIT CONVERTER LOGIC ====================
+function updateConverterUnits() {
+  const category = document.getElementById('convCategory').value;
+  const fromSelect = document.getElementById('convFrom'); const toSelect = document.getElementById('convTo');
+  fromSelect.innerHTML = ''; toSelect.innerHTML = '';
+  const units = CONVERSION_DATA[category].units;
+  for (let key in units) { fromSelect.innerHTML += `<option value="${key}">${units[key]}</option>`; toSelect.innerHTML += `<option value="${key}">${units[key]}</option>`; }
+  if (category === 'length') toSelect.value = 'km'; if (category === 'weight') toSelect.value = 'g'; if (category === 'temp') toSelect.value = 'F';
+  if (category === 'data') toSelect.value = 'MB'; if (category === 'time') toSelect.value = 'hr';
+  convertUnit();
+}
+
+function convertUnit() {
+  const category = document.getElementById('convCategory').value;
+  const inputVal = parseFloat(document.getElementById('convInput').value);
+  const fromUnit = document.getElementById('convFrom').value; const toUnit = document.getElementById('convTo').value;
+  const outputField = document.getElementById('convOutput');
+  if (isNaN(inputVal)) { outputField.value = ''; return; }
+  let result = 0;
+  if (category === 'temp') {
+    let celsius; if (fromUnit === 'C') celsius = inputVal; else if (fromUnit === 'F') celsius = (inputVal - 32) * 5/9; else if (fromUnit === 'K') celsius = inputVal - 273.15;
+    if (toUnit === 'C') result = celsius; else if (toUnit === 'F') result = (celsius * 9/5) + 32; else if (toUnit === 'K') result = celsius + 273.15;
+  } else {
+    const rates = CONVERSION_DATA[category].rates; const baseValue = inputVal * rates[fromUnit]; result = baseValue / rates[toUnit];
+  }
+  outputField.value = Number(result.toFixed(5)).toString();
+}
+
+function setupUnitConverter() {
+  const convBtn = document.getElementById('unitConvBtn'); const closeConvBtn = document.getElementById('closeConvBtn');
+  const convPanel = document.getElementById('unitConverterPanel'); const mainGroups = document.querySelectorAll('.shape-group');
+  const topBar = document.querySelector('.top-bar'); const unitSel = document.querySelector('.unit-selector');
+  const normalCalc = document.querySelector('main.calculator');
+  if (convBtn) { convBtn.addEventListener('click', () => { convPanel.classList.remove('hidden'); normalCalc.classList.add('hidden'); mainGroups.forEach(g => g.classList.add('hidden')); if(topBar) topBar.classList.add('hidden'); if(unitSel) unitSel.classList.add('hidden'); updateConverterUnits(); }); }
+  if (closeConvBtn) { closeConvBtn.addEventListener('click', () => { convPanel.classList.add('hidden'); normalCalc.classList.remove('hidden'); mainGroups.forEach(g => g.classList.remove('hidden')); if(topBar) topBar.classList.remove('hidden'); if(unitSel) unitSel.classList.remove('hidden'); }); }
+}
+
+// ==================== 8. UI & SETTINGS ====================
 function setupThemeToggle() {
   const toggleBtn = document.getElementById('themeToggle'); if (!toggleBtn) return;
   const toggleIcon = toggleBtn.querySelector('.toggle-icon'); const toggleText = toggleBtn.querySelector('.toggle-text');
   if (localStorage.getItem('theme') === 'dark') { document.body.classList.add('dark-mode'); toggleIcon.textContent = '☀️'; toggleText.textContent = 'Light Mode'; }
   toggleBtn.addEventListener('click', () => {
-    const isDark = document.body.classList.toggle('dark-mode');
-    toggleIcon.textContent = isDark ? '☀️' : '🌙'; toggleText.textContent = isDark ? 'Light Mode' : 'Dark Mode';
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    const isDark = document.body.classList.toggle('dark-mode'); toggleIcon.textContent = isDark ? '☀️' : '🌙'; toggleText.textContent = isDark ? 'Light Mode' : 'Dark Mode'; localStorage.setItem('theme', isDark ? 'dark' : 'light');
   });
 }
 
@@ -376,48 +346,27 @@ function saveToHistory(type, result) {
   const shape = SHAPES[currentShape]; const inputValues = {};
   shape.fields.forEach(f => { const inp = document.getElementById(`input-${f.key}`); if (inp) inputValues[f.label] = inp.value; });
   const entry = { shape: shape.name, type, inputs: inputValues, result, time: new Date().toLocaleTimeString() };
-  const history = getHistory(); history.unshift(entry); if (history.length > 20) history.pop();
-  localStorage.setItem(HISTORY_KEY, JSON.stringify(history)); renderHistory();
+  const history = getHistory(); history.unshift(entry); if (history.length > 20) history.pop(); localStorage.setItem(HISTORY_KEY, JSON.stringify(history)); renderHistory();
 }
 function renderHistory() {
   const list = document.getElementById('historyList'); if (!list) return;
-  const history = getHistory();
-  if (history.length === 0) { list.innerHTML = '<p class="history-empty">No calculations yet.</p>'; return; }
+  const history = getHistory(); if (history.length === 0) { list.innerHTML = '<p class="history-empty">No calculations yet.</p>'; return; }
   let html = '';
-  history.forEach(item => {
-    const inputsText = Object.entries(item.inputs).map(([l, v]) => `${l}: ${v}`).join(', ');
-    html += `<div class="history-item"><span class="history-shape-badge">${item.shape}</span><div class="history-details"><span class="history-inputs">${inputsText}</span><span class="history-results">${item.type}: <strong>${item.result}</strong></span></div><span class="history-time">🕐 ${item.time}</span></div>`;
-  });
+  history.forEach(item => { const inputsText = Object.entries(item.inputs).map(([l, v]) => `${l}: ${v}`).join(', '); html += `<div class="history-item"><span class="history-shape-badge">${item.shape}</span><div class="history-details"><span class="history-inputs">${inputsText}</span><span class="history-results">${item.type}: <strong>${item.result}</strong></span></div><span class="history-time">🕐 ${item.time}</span></div>`; });
   list.innerHTML = html;
 }
-function setupHistory() {
-  const clearBtn = document.getElementById('btnClearHistory');
-  if (clearBtn) clearBtn.addEventListener('click', () => { if (confirm('Clear history?')) { localStorage.removeItem(HISTORY_KEY); renderHistory(); } });
-  renderHistory();
-}
+function setupHistory() { const clearBtn = document.getElementById('btnClearHistory'); if (clearBtn) clearBtn.addEventListener('click', () => { if (confirm('Clear history?')) { localStorage.removeItem(HISTORY_KEY); renderHistory(); } }); renderHistory(); }
 
-function setupUnitSelector() {
-  const unitSelect = document.getElementById('unitSelect');
-  if (unitSelect) unitSelect.addEventListener('change', () => { renderInputs(currentShape); resetResults(); });
-}
+function setupUnitSelector() { const unitSelect = document.getElementById('unitSelect'); if (unitSelect) unitSelect.addEventListener('change', () => { renderInputs(currentShape); resetResults(); }); }
 
 function setupExplanation() {
-  const toggleBtn = document.getElementById('explanationToggle'); const content = document.getElementById('explanationContent');
-  if (!toggleBtn || !content) return;
-  toggleBtn.addEventListener('click', () => {
-    explanationVisible = !explanationVisible;
-    content.classList.toggle('hidden', !explanationVisible);
-    toggleBtn.textContent = explanationVisible ? '📖 Hide Formula Explanation' : '📖 Show Formula Explanation';
-    if (explanationVisible) renderExplanation();
-  });
+  const toggleBtn = document.getElementById('explanationToggle'); const content = document.getElementById('explanationContent'); if (!toggleBtn || !content) return;
+  toggleBtn.addEventListener('click', () => { explanationVisible = !explanationVisible; content.classList.toggle('hidden', !explanationVisible); toggleBtn.textContent = explanationVisible ? '📖 Hide Formula Explanation' : '📖 Show Formula Explanation'; if (explanationVisible) renderExplanation(); });
 }
 function renderExplanation() {
-  const titleEl = document.getElementById('explanationTitle'); const bodyEl = document.getElementById('explanationBody');
-  if (!titleEl || !bodyEl) return;
-  const shape = SHAPES[currentShape];
-  if (!shape || !shape.explanation) { bodyEl.innerHTML = '<p>Explanation not available.</p>'; return; }
-  const exp = shape.explanation;
-  titleEl.textContent = exp.title;
+  const titleEl = document.getElementById('explanationTitle'); const bodyEl = document.getElementById('explanationBody'); if (!titleEl || !bodyEl) return;
+  const shape = SHAPES[currentShape]; if (!shape || !shape.explanation) { bodyEl.innerHTML = '<p>Explanation not available.</p>'; return; }
+  const exp = shape.explanation; titleEl.textContent = exp.title;
   bodyEl.innerHTML = `<p><strong>How it works:</strong> ${exp.howItWorks}</p><p><strong>Formula:</strong></p><div class="explanation-formula-box">${exp.areaExplained}</div><div class="explanation-formula-box">${exp.perimeterExplained}</div><div class="explanation-example"><strong>📝 Example:</strong><p><strong>Inputs:</strong> ${exp.example.inputs}</p><p><strong>${exp.example.area}</strong></p><p><strong>${exp.example.perimeter}</strong></p></div>`;
 }
 
@@ -441,49 +390,29 @@ function setupPrintAndCopy() {
   document.querySelectorAll('button').forEach(btn => { btn.addEventListener('click', () => { setTimeout(playClick, 50); }); });
 }
 
-// ==================== 8. LANGUAGE TRANSLATION (MyMemory API) ====================
 async function changeLanguage(targetLang) {
   if (targetLang === 'en') { location.reload(); return; }
   const elementsToTranslate = document.querySelectorAll('h1, h2, h3, p, button, label, span, .shape-btn, .result-label, .result-value');
-  const langSelect = document.getElementById('languageSelect');
-  const originalText = langSelect.options[langSelect.selectedIndex].text;
-  langSelect.options[langSelect.selectedIndex].text = "Translating...";
+  const langSelect = document.getElementById('languageSelect'); if(!langSelect) return;
+  const originalText = langSelect.options[langSelect.selectedIndex].text; langSelect.options[langSelect.selectedIndex].text = "Translating...";
   try {
     for (let el of elementsToTranslate) {
       if (el.innerText && el.innerText.trim() !== '' && !el.innerText.includes('—')) {
         const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(el.innerText)}&langpair=en|${targetLang}`;
-        const response = await fetch(url);
-        const data = await response.json();
+        const response = await fetch(url); const data = await response.json();
         if (data.responseData && data.responseData.translatedText) { el.innerText = data.responseData.translatedText; }
       }
     }
-  } catch (error) { console.log("Translation error:", error); } 
-  finally { langSelect.options[langSelect.selectedIndex].text = originalText; }
+  } catch (error) { console.log("Translation error:", error); } finally { langSelect.options[langSelect.selectedIndex].text = originalText; }
 }
 
-// ==================== 9. PWA INSTALL LOGIC ====================
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault(); deferredPrompt = e;
-  const installBtn = document.getElementById('installAppBtn');
-  if (installBtn) installBtn.classList.remove('hidden');
-});
-
+window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; const installBtn = document.getElementById('installAppBtn'); if (installBtn) installBtn.classList.remove('hidden'); });
 document.addEventListener('DOMContentLoaded', () => {
   const installBtn = document.getElementById('installAppBtn');
-  if (installBtn) {
-    installBtn.addEventListener('click', async () => {
-      if (!deferredPrompt) return;
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      if (outcome === 'accepted') console.log('User accepted install');
-      deferredPrompt = null;
-      installBtn.classList.add('hidden');
-    });
-  }
+  if (installBtn) { installBtn.addEventListener('click', async () => { if (!deferredPrompt) return; deferredPrompt.prompt(); const { outcome } = await deferredPrompt.userChoice; deferredPrompt = null; installBtn.classList.add('hidden'); }); }
 });
 
-// ==================== 10. MAIN INIT ====================
+// ==================== 9. MAIN INIT ====================
 function init() {
   shapeBtns.forEach(btn => btn.addEventListener('click', () => switchShape(btn.dataset.shape)));
   document.getElementById('btnArea').addEventListener('click', calculateArea);
@@ -494,22 +423,8 @@ function init() {
   const sciPanel = document.getElementById('scientificPanel'); const mainGroups = document.querySelectorAll('.shape-group');
   const topBar = document.querySelector('.top-bar'); const unitSel = document.querySelector('.unit-selector');
   
-  if (sciModeBtn) {
-    sciModeBtn.addEventListener('click', () => {
-      sciPanel.classList.remove('hidden');
-      document.querySelector('main.calculator').classList.add('hidden');
-      mainGroups.forEach(g => g.classList.add('hidden'));
-      if(topBar) topBar.classList.add('hidden'); if(unitSel) unitSel.classList.add('hidden');
-    });
-  }
-  if (closeSciBtn) {
-    closeSciBtn.addEventListener('click', () => {
-      sciPanel.classList.add('hidden');
-      document.querySelector('main.calculator').classList.remove('hidden');
-      mainGroups.forEach(g => g.classList.remove('hidden'));
-      if(topBar) topBar.classList.remove('hidden'); if(unitSel) unitSel.classList.remove('hidden');
-    });
-  }
+  if (sciModeBtn) { sciModeBtn.addEventListener('click', () => { sciPanel.classList.remove('hidden'); document.querySelector('main.calculator').classList.add('hidden'); mainGroups.forEach(g => g.classList.add('hidden')); if(topBar) topBar.classList.add('hidden'); if(unitSel) unitSel.classList.add('hidden'); }); }
+  if (closeSciBtn) { closeSciBtn.addEventListener('click', () => { sciPanel.classList.add('hidden'); document.querySelector('main.calculator').classList.remove('hidden'); mainGroups.forEach(g => g.classList.remove('hidden')); if(topBar) topBar.classList.remove('hidden'); if(unitSel) unitSel.classList.remove('hidden'); }); }
 
   setupThemeToggle(); setupHistory(); setupUnitSelector(); setupExplanation(); setupPrintAndCopy();
   setupUnitConverter(); switchShape('rectangle');
@@ -517,7 +432,6 @@ function init() {
 
 init();
 
-// Service Worker for PWA
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js'); });
 }
