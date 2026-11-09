@@ -11,7 +11,13 @@
 <body>
 
   <!-- ================= TOP BAR WITH DARK MODE TOGGLE ================= -->
-  <div class="top-bar">
+   <div class="top-bar">
+    <!-- Naya Sound Button -->
+    <button id="soundToggle" class="theme-toggle" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); margin-right: 10px;">
+      <span class="toggle-icon" id="soundIcon">🔊</span>
+      <span class="toggle-text" id="soundText">Sound On</span>
+    </button>
+
     <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
       <span class="toggle-icon">🌙</span>
       <span class="toggle-text">Dark Mode</span>
@@ -84,13 +90,19 @@
     </section>
 
        <aside class="result-panel">
-      <div class="result-box">
+            <div class="result-box">
         <span class="result-label" id="label1">Area</span>
-        <span class="result-value" id="resultArea">—</span>
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+          <span class="result-value" id="resultArea">—</span>
+          <button class="copy-btn" id="copyAreaBtn" title="Copy Area">📋</button>
+        </div>
       </div>
       <div class="result-box">
         <span class="result-label" id="label2">Perimeter</span>
-        <span class="result-value" id="resultPerimeter">—</span>
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+          <span class="result-value" id="resultPerimeter">—</span>
+          <button class="copy-btn" id="copyPerimeterBtn" title="Copy Perimeter">📋</button>
+        </div>
       </div>
       <div class="error-box hidden" id="errorBox">
         ⚠️ <span id="errorText"></span>

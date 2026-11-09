@@ -1003,4 +1003,34 @@ body.dark-mode ::selection {
 }
 body.dark-mode ::-webkit-scrollbar-thumb {
   background: #e94560;
+}/* ============================================================
+   COPY BUTTON STYLING
+   ============================================================ */
+.copy-btn {
+  background: transparent;
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: var(--text-primary);
+}
+
+.copy-btn:hover {
+  background: var(--panel-bg);
+  transform: scale(1.1);
+  border-color: var(--text-accent);
+}
+
+.copy-btn:active {
+  transform: scale(0.95);
+}
+
+body.dark-mode .copy-btn {
+  border-color: var(--input-border);
+  color: var(--text-primary);
+}
+body.dark-mode .copy-btn:hover {
+  background: var(--input-bg);
 }
