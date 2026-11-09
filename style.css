@@ -1,8 +1,7 @@
 /* ============================================================
-   DIGITAL CALCULATOR - FINAL MASTER STYLESHEET (100% FIXED)
+   DIGITAL CALCULATOR - FINAL MASTER STYLESHEET (V10)
    ============================================================ */
 
-/* -------- 1. ROOT VARIABLES -------- */
 :root {
   --bg-color: #e0e5ec;
   --text-primary: #1a2332;
@@ -32,199 +31,71 @@ body.dark-mode {
   --result-bg: rgba(22, 33, 62, 0.9);
 }
 
-/* -------- 2. RESET & BODY -------- */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: 'Segoe UI', Tahoma, sans-serif;
-}
-
+/* Reset & Body */
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
 body {
   background-color: var(--bg-color);
   color: var(--text-primary);
   min-height: 100vh;
   display: flex;
-  flex-direction: column;
+  flex-direction: column; /* Sab kuch vertical set karein */
   align-items: center;
   padding: 20px;
   overflow-x: hidden;
   transition: background-color 0.5s ease;
 }
 
-/* -------- 3. ANIMATED BACKGROUND -------- */
-.animated-bg {
-  position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
-  z-index: -1;
-  overflow: hidden;
-}
-.circle {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.6;
-  animation: float 10s infinite ease-in-out alternate;
-}
+/* Animated Background */
+.animated-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; }
+.circle { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.6; animation: float 10s infinite ease-in-out alternate; }
 .circle1 { width: 300px; height: 300px; background: #4facfe; top: -10%; left: -10%; }
 .circle2 { width: 400px; height: 400px; background: #00f2fe; bottom: -20%; right: -10%; animation-delay: -5s; }
 .circle3 { width: 250px; height: 250px; background: #f093fb; top: 40%; left: 60%; animation-delay: -2s; }
-
 body.dark-mode .circle1 { background: #ff6a00; opacity: 0.3; }
 body.dark-mode .circle2 { background: #ee0979; opacity: 0.3; }
 body.dark-mode .circle3 { background: #4facfe; opacity: 0.2; }
+@keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(50px, 50px) scale(1.1); } }
 
-@keyframes float {
-  0% { transform: translate(0, 0) scale(1); }
-  100% { transform: translate(50px, 50px) scale(1.1); }
-}
-
-/* -------- 4. TOP BAR (Right Aligned & Clickable) -------- */
-.top-bar {
-  width: 100%;
-  max-width: 950px;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 20px;
-  position: relative;
-  z-index: 99999 !important; 
-}
-
-.theme-toggle {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 20px;
-  border: 1px solid var(--glass-border);
-  border-radius: 50px;
-  background: var(--glass-bg);
-  backdrop-filter: blur(10px);
-  color: var(--text-primary);
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: var(--glass-shadow);
-  z-index: 100000 !important;
-  pointer-events: auto !important;
-}
-
+/* Top Bar */
+.top-bar { width: 100%; max-width: 950px; display: flex; justify-content: flex-end; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; position: relative; z-index: 9999; }
+.theme-toggle { display: flex; align-items: center; gap: 8px; padding: 10px 20px; border: 1px solid var(--glass-border); border-radius: 50px; background: var(--glass-bg); backdrop-filter: blur(10px); color: var(--text-primary); font-weight: 700; cursor: pointer; transition: all 0.3s ease; box-shadow: var(--glass-shadow); }
 .theme-toggle:hover { transform: translateY(-2px); }
 #soundToggle { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; border: none; }
+#languageSelect { appearance: none; background: var(--glass-bg) !important; border: 1px solid var(--glass-border) !important; color: var(--text-primary) !important; padding: 10px 30px 10px 20px !important; border-radius: 50px !important; font-weight: 700; cursor: pointer; outline: none; box-shadow: var(--glass-shadow); text-align: center; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230d47a1'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E") !important; background-repeat: no-repeat !important; background-position: right 10px center !important; background-size: 16px !important; }
+#languageSelect option { background-color: #1a1a2e; color: #ffffff; }
 
-/* Language Dropdown Customization */
-#languageSelect {
-  appearance: none !important;
-  -webkit-appearance: none !important;
-  -moz-appearance: none !important;
-  background: var(--glass-bg) !important;
-  border: 1px solid var(--glass-border) !important;
-  color: var(--text-primary) !important;
-  padding: 10px 20px !important;
-  border-radius: 50px !important;
-  font-weight: 700;
-  cursor: pointer;
-  outline: none;
-  box-shadow: var(--glass-shadow);
-  text-align: center;
-  z-index: 100000 !important;
-  pointer-events: auto !important;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2364b5f6'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E") !important;
-  background-repeat: no-repeat !important;
-  background-position: right 12px center !important;
-  background-size: 18px !important;
-  padding-right: 40px !important;
-}
-
-body.dark-mode #languageSelect {
-  background: rgba(0, 0, 0, 0.3) !important;
-  border-color: rgba(255, 255, 255, 0.1) !important;
-}
-
-#languageSelect option {
-  background-color: #1a1a2e !important;
-  color: #ffffff !important;
-  font-weight: 600;
-  padding: 12px;
-}
-
-body:not(.dark-mode) #languageSelect option {
-  background-color: #2c3e50 !important;
-  color: #ffffff !important;
-}
-
-/* -------- 5. HEADER & SHAPE GROUPS -------- */
+/* Header */
 .site-header { text-align: center; margin-bottom: 25px; }
 .site-header h1 { font-size: 2.5rem; color: var(--text-accent); margin-bottom: 10px; }
 .welcome { color: var(--text-secondary); font-weight: 500; }
 
-.shape-group, .calculator, .history-section, .explanation-content, .explanation-toggle {
-  background: var(--glass-bg);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow);
-  border-radius: 24px;
-}
-
-.shape-group { width: 100%; max-width: 950px; padding: 20px; margin-bottom: 20px; }
+/* Panels */
+.shape-group, .calculator, .history-section, .explanation-content, .explanation-toggle { background: var(--glass-bg); backdrop-filter: blur(12px); border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow); border-radius: 24px; width: 100%; max-width: 950px; margin-bottom: 20px; padding: 20px; }
 .shape-group-title { font-size: 1rem; color: var(--text-accent); margin-bottom: 15px; text-align: center; }
 .shape-nav { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
 
-.shape-btn {
-  background: var(--input-bg);
-  border: 1px solid var(--glass-border);
-  color: var(--text-primary);
-  padding: 10px 18px;
-  border-radius: 30px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-}
+/* Shape Buttons */
+.shape-btn { background: var(--input-bg); border: 1px solid var(--glass-border); color: var(--text-primary); padding: 10px 18px; border-radius: 30px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
 .shape-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
 .shape-btn.active { background: var(--text-accent); color: white; border-color: var(--text-accent); }
+#shapeNav3D .shape-btn { background: linear-gradient(135deg, #2b1055 0%, #7597de 100%); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.3); }
+#shapeNav3D .shape-btn.active { background: linear-gradient(135deg, #e65c00 0%, #F9D423 100%); color: #1a1a1a; border-color: #F9D423; }
 
-#shapeNav3D .shape-btn {
-  background: linear-gradient(135deg, #2b1055 0%, #7597de 100%);
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 4px 15px rgba(43, 16, 85, 0.4);
-}
-#shapeNav3D .shape-btn:hover { transform: translateY(-4px) scale(1.05); }
-#shapeNav3D .shape-btn.active {
-  background: linear-gradient(135deg, #e65c00 0%, #F9D423 100%);
-  color: #1a1a1a; border-color: #F9D423;
-}
-
-/* -------- 6. CALCULATOR MAIN -------- */
-.calculator { display: flex; flex-wrap: wrap; gap: 25px; width: 100%; max-width: 950px; padding: 25px; margin-bottom: 25px; }
+/* Main Calculator Area */
+main.calculator { display: flex; flex-wrap: wrap; gap: 25px; padding: 25px; }
 .input-panel { flex: 2 1 320px; }
 .result-panel { flex: 1 1 240px; display: flex; flex-direction: column; gap: 15px; }
-
 .formula-hint { background: rgba(255,255,255,0.4); padding: 12px; border-radius: 12px; margin-bottom: 15px; font-size: 0.9rem; text-align: center; color: var(--text-accent); }
 body.dark-mode .formula-hint { background: rgba(0,0,0,0.3); }
 
-/* Inputs - Luxury Fix */
+/* Inputs */
 .input-group { display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px; }
 .input-group label { font-weight: 600; font-size: 0.9rem; }
 .input-with-unit { position: relative; display: flex; align-items: center; }
-.input-with-unit input {
-  width: 100%; padding: 14px 55px 14px 16px !important; border-radius: 12px; border: 1px solid var(--input-border);
-  background: var(--input-bg); color: var(--text-primary); font-size: 16px; font-weight: 600; outline: none; transition: 0.3s;
-  box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
-}
-.input-with-unit input:focus { border-color: var(--text-accent); box-shadow: 0 0 0 3px rgba(13, 71, 161, 0.2), inset 0 2px 5px rgba(0,0,0,0.05); background: var(--card-bg); }
-.input-unit-label { 
-  position: absolute; right: 16px !important; left: auto !important; font-weight: 800; color: var(--text-accent); font-size: 0.85rem; 
-  text-transform: uppercase; letter-spacing: 1px; pointer-events: none; background: var(--glass-bg); padding: 4px 8px; border-radius: 6px;
-}
-
-/* Hide Arrows */
-.input-with-unit input::-webkit-outer-spin-button,
-.input-with-unit input::-webkit-inner-spin-button { -webkit-appearance: none !important; margin: 0 !important; }
-.input-with-unit input[type=number] { -moz-appearance: textfield !important; }
+.input-with-unit input { width: 100%; padding: 14px 55px 14px 16px !important; border-radius: 12px; border: 1px solid var(--input-border); background: var(--input-bg); color: var(--text-primary); font-size: 16px; font-weight: 600; outline: none; transition: 0.3s; box-shadow: inset 0 2px 5px rgba(0,0,0,0.05); }
+.input-with-unit input:focus { border-color: var(--text-accent); box-shadow: 0 0 0 3px rgba(13, 71, 161, 0.2); }
+.input-unit-label { position: absolute; right: 16px !important; font-weight: 800; color: var(--text-accent); font-size: 0.85rem; text-transform: uppercase; pointer-events: none; background: var(--glass-bg); padding: 4px 8px; border-radius: 6px; }
+.input-with-unit input::-webkit-outer-spin-button, .input-with-unit input::-webkit-inner-spin-button { -webkit-appearance: none !important; margin: 0 !important; }
 
 /* Result Boxes */
 .result-box { background: var(--result-bg); padding: 15px; border-radius: 16px; display: flex; flex-direction: column; position: relative; }
@@ -242,320 +113,143 @@ body.dark-mode .formula-hint { background: rgba(0,0,0,0.3); }
 .btn-print { background: #8e24aa; color: white; }
 .btn:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
 
-/* -------- 7. UNIT SELECTOR -------- */
-.unit-selector {
-  background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.6);
-  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15); padding: 15px 25px; border-radius: 20px;
-  display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 25px;
+/* Currency / Unit / Log Panel Buttons (Hidden Logic) */
+#unitConverterPanel, #scientificPanel, #ratioCalculatorPanel, #percentageCalculatorPanel, #logCalculatorPanel, #currencyCalculatorPanel {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 auto 30px auto;
 }
-body.dark-mode .unit-selector { background: rgba(15, 52, 96, 0.4); border-color: rgba(100, 181, 246, 0.2); }
-.unit-selector label { font-weight: 800; color: var(--text-accent); font-size: 1rem; text-transform: uppercase; }
-.unit-selector select {
-  background: #ffffff; border: 2px solid transparent; border-radius: 12px; padding: 10px 20px;
-  font-size: 1rem; font-weight: 700; color: #0d47a1; cursor: pointer; outline: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+#unitConverterPanel.hidden, #scientificPanel.hidden, #ratioCalculatorPanel.hidden, #percentageCalculatorPanel.hidden, #logCalculatorPanel.hidden, #currencyCalculatorPanel.hidden {
+  display: none !important;
 }
-body.dark-mode .unit-selector select { background: #0f3460; color: #64b5f6; }
 
-/* -------- 8. HISTORY & EXPLANATION -------- */
+/* Tools Container */
+.modes-container { display: flex !important; flex-wrap: wrap !important; justify-content: center !important; gap: 12px !important; width: 100%; max-width: 950px; margin-bottom: 25px; }
+.mode-btn, .more-tools-menu .btn { padding: 15px 25px; border-radius: 30px; font-weight: 700; white-space: nowrap; }
+.mobile-menu-btn { display: none !important; }
+.more-tools-menu { display: flex !important; gap: 12px !important; position: static !important; }
+
+/* History & Explanation */
 .history-section, .explanation-section { width: 100%; max-width: 950px; padding: 20px; margin-bottom: 25px; }
 .history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
 .history-list { max-height: 250px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
 .history-item { background: var(--input-bg); padding: 12px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--glass-border); }
 .history-shape-badge { background: var(--text-accent); color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; }
 .btn-clear-history { background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%); color: white; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 15px rgba(255, 65, 108, 0.4); }
-
 .explanation-toggle { width: 100%; max-width: 950px; padding: 18px; margin-bottom: 15px; cursor: pointer; font-weight: bold; color: white !important; background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%) !important; border: none; font-size: 1.1rem; border-radius: 15px; }
 .explanation-content { width: 100%; max-width: 950px; padding: 25px; margin-bottom: 25px; }
 .explanation-formula-box { background: #f8f9fa; padding: 15px; border-radius: 10px; margin: 10px 0; font-family: monospace; font-size: 1.1rem; border-left: 4px solid #2a5298; }
 body.dark-mode .explanation-formula-box { background: rgba(0,0,0,0.2); color: #e0e0e0; }
 
-/* -------- 9. SCIENTIFIC CALCULATOR -------- */
-#scientificPanel { width: 100%; max-width: 500px; margin: 0 auto 30px auto; padding: 30px; background: var(--glass-bg); backdrop-filter: blur(15px); border-radius: 25px; border: 1px solid var(--glass-border); }
+/* Scientific Calculator */
+#scientificPanel { max-width: 500px; padding: 30px; }
 .sci-btn { padding: 15px 10px; font-size: 1.2rem; font-weight: 700; border: 1px solid var(--glass-border); border-radius: 15px; background: rgba(255, 255, 255, 0.5); color: var(--text-primary); cursor: pointer; transition: 0.2s; }
 body.dark-mode .sci-btn { background: rgba(0, 0, 0, 0.3); }
 .sci-btn:hover { transform: translateY(-2px); background: rgba(255, 255, 255, 0.8); }
-body.dark-mode .sci-btn:hover { background: rgba(255, 255, 255, 0.1); }
-.num-btn { background: var(--card-bg); font-weight: 800; }
 
-/* -------- 10. UTILITIES & MOBILE -------- */
+/* Utilities */
 .hidden { display: none !important; }
 .error-box { background: #ffebee; color: #c62828; padding: 12px; border-radius: 12px; margin-top: 10px; font-weight: bold; }
 
-@media (max-width: 700px) {
+/* === MOBILE VIEW === */
+@media (max-width: 768px) {
   .site-header h1 { font-size: 1.8rem; }
   .shape-nav { display: grid; grid-template-columns: 1fr 1fr; }
   .shape-btn:last-child { grid-column: span 2; }
   .btn { flex: 1 1 100%; }
   .top-bar { justify-content: center; }
   .history-item { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .modes-container { flex-wrap: nowrap !important; justify-content: space-between !important; }
+  .mode-btn { flex: 1 1 0 !important; padding: 12px 10px !important; font-size: 0.9rem !important; }
+  .mobile-menu-btn { display: block !important; flex: 0 0 auto !important; background: var(--glass-bg) !important; color: var(--text-primary) !important; border: 1px solid var(--glass-border) !important; font-size: 1.5rem !important; padding: 10px 15px !important; border-radius: 30px !important; }
+  .more-tools-menu { display: none !important; flex-direction: column !important; position: absolute !important; top: 60px !important; right: 20px !important; background: var(--glass-bg) !important; backdrop-filter: blur(20px) !important; border: 1px solid var(--glass-border) !important; border-radius: 15px !important; padding: 10px !important; box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important; z-index: 10000 !important; min-width: 200px !important; }
+  .more-tools-menu.show-menu { display: flex !important; }
+  .more-tools-menu .btn { width: 100% !important; margin-bottom: 5px !important; justify-content: flex-start !important; }
 }/* ============================================================
-   MOBILE PROFESSIONAL LAYOUT FIX
-   ============================================================ */
-@media (max-width: 768px) {
-  /* Main container ko flex-column mein badlein mobile par */
-  body {
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
-  }
-
-  /* Calculator (Inputs + Results) ko sabse upar laayein */
-  main.calculator {
-    order: -1; /* Ye isko sabse upar bhej dega */
-    margin-top: 10px;
-    margin-bottom: 20px;
-    padding: 15px;
-  }
-
-  /* Shapes wale buttons ko thoda neeche bhej dein */
-  .shape-group {
-    order: 2; 
-  }
-
-  /* Inputs ko mobile par zyada jagah dein */
-  .input-panel, .result-panel {
-    flex: 1 1 100%;
-  }
-
-  /* Result boxes ko mobile par side-by-side (aamne-saamne) karein */
-  .result-panel {
-    flex-direction: row;
-    gap: 10px;
-  }
-  .result-box {
-    flex: 1;
-    padding: 10px;
-  }
-  .result-value {
-    font-size: 1.4rem;
-  }
-
-  /* History aur Explanation ko sabse aakhir mein rakhein */
-  .history-section { order: 3; }
-  .explanation-section { order: 4; }
-  .unit-selector { order: 1; }
-
-  /* Top bar (Buttons) ko chota karein taake jagah bache */
-  .top-bar {
-    gap: 5px;
-    justify-content: center;
-    margin-bottom: 10px;
-  }
-  .theme-toggle {
-    padding: 6px 12px;
-    font-size: 0.8rem;
-  }
-}/* Scientific Calculator Buttons ko Mobile par Adjust karein */
-@media (max-width: 400px) {
-  .sci-btn {
-    padding: 12px 5px !important;
-    font-size: 1rem !important;
-  }
-}
-/* ============================================================
-   FINAL MODES & TOOLS LAYOUT (100% FIXED - NO DUPLICATES)
+   CURRENCY DUPLICATE FIX
    ============================================================ */
 
-.modes-container {
+/* Upar wale chote Currency button ko chhupa dein (Desktop aur Mobile dono par) */
+#mobileCurrencyBtn {
+  display: none !important;
+}/* ============================================================
+   LUXURY MEASUREMENT UNIT SELECTOR
+   ============================================================ */
+
+/* 1. Main Container (Glass Effect) */
+.unit-selector {
   display: flex;
-  gap: 12px;
-  justify-content: center;
   align-items: center;
-  flex-wrap: wrap;
-  margin-bottom: 25px;
+  justify-content: center;
+  gap: 15px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(15px);
+  border: 1px solid var(--glass-border);
+  border-radius: 15px;
+  padding: 15px 25px;
+  margin: 0 auto 25px auto;
   width: 100%;
   max-width: 950px;
+  box-shadow: var(--glass-shadow);
 }
 
-.mode-btn, .more-tools-menu .btn {
-  padding: 15px 25px;
-  font-size: 1rem;
-  border-radius: 30px;
+/* 2. Label (Text) */
+.unit-selector label {
   font-weight: 700;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  color: var(--text-accent);
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* 3. Dropdown (Select Box) */
+.unit-selector select {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  padding: 10px 35px 10px 15px; /* Right side par arrow ke liye jagah */
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
   transition: all 0.3s ease;
-  white-space: nowrap; 
+  
+  /* Custom Arrow */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2364b5f6'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 18px;
 }
 
-.mode-btn:hover, .more-tools-menu .btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+/* 4. Hover aur Focus Effect */
+.unit-selector select:hover, 
+.unit-selector select:focus {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-color: var(--text-accent);
+  box-shadow: 0 0 10px rgba(13, 71, 161, 0.3);
 }
 
-/* Desktop Layout */
-.more-tools-menu {
-  display: flex;
-  gap: 12px;
-  align-items: center;
+/* 5. Dropdown Options (List) */
+.unit-selector select option {
+  background-color: #1a1a2e;
+  color: #ffffff;
+  font-weight: 600;
+  padding: 10px;
 }
 
-.mobile-menu-btn {
-  display: none !important;
-}
-
-/* === MOBILE VIEW === */
+/* 6. Mobile Responsive */
 @media (max-width: 768px) {
-  .modes-container {
-    flex-direction: row;
-    justify-content: space-between;
-    gap: 10px;
-  }
-
-  .mode-btn {
-    flex: 1;
-    font-size: 0.9rem;
-    padding: 12px 10px;
-  }
-
-  .mobile-menu-btn {
-    display: block !important;
-    background: var(--glass-bg);
-    color: var(--text-primary);
-    border: 1px solid var(--glass-border);
-    font-size: 1.5rem;
-    padding: 10px 20px;
-    border-radius: 30px;
-    cursor: pointer;
-  }
-
-  .more-tools-menu {
-    display: none; 
-    position: absolute;
-    top: 100%;
-    right: 10px;
-    background: var(--glass-bg);
-    backdrop-filter: blur(20px);
-    border: 1px solid var(--glass-border);
-    border-radius: 15px;
-    padding: 10px;
+  .unit-selector {
     flex-direction: column;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    z-index: 10000;
-    margin-top: 10px;
-    min-width: 200px;
-  }
-
-  .more-tools-menu.show-menu {
-    display: flex;
-    animation: fadeInDown 0.3s ease;
-  }
-
-  .more-tools-menu .btn {
-    width: 100%;
-    text-align: left;
-    justify-content: flex-start;
-    padding: 12px 15px;
-    font-size: 0.95rem;
-    margin-bottom: 5px;
-  }
-}
-
-@keyframes fadeInDown {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
-}/* ============================================================
-   ULTIMATE FIX FOR LAYOUT (DONO DESKTOP & MOBILE)
-   ============================================================ */
-
-/* 1. Body ko wapas normal (upar se neeche) karein */
-body {
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-}
-
-/* 2. Main calculator aur shapes ko wapas apni jagah (block) par laayein */
-main.calculator, .shape-group, .history-section, .explanation-section, .unit-selector {
-  width: 100% !important;
-  max-width: 950px !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-}
-
-/* 3. Buttons wale container ko perfect center karein */
-.modes-container {
-  display: flex !important;
-  flex-direction: row !important;
-  flex-wrap: wrap !important;
-  justify-content: center !important;
-  align-items: center !important;
-  gap: 12px !important;
-  width: 100% !important;
-  max-width: 950px !important;
-  margin: 0 auto 25px auto !important;
-}
-
-/* 4. Saare mode buttons ko barabar size dein */
-.mode-btn, .more-tools-menu .btn {
-  flex: 0 1 auto !important;
-  padding: 15px 25px !important;
-  border-radius: 30px !important;
-  font-weight: 700 !important;
-  white-space: nowrap !important;
-}
-
-/* 5. Desktop par "More Tools" ko normal dikhayein */
-.more-tools-menu {
-  display: flex !important;
-  flex-direction: row !important;
-  gap: 12px !important;
-  position: static !important;
-}
-
-.mobile-menu-btn {
-  display: none !important;
-}
-
-/* 6. Mobile ke liye alag layout */
-@media (max-width: 768px) {
-  /* Mobile par buttons ko line mein rakhein */
-  .modes-container {
-    flex-wrap: nowrap !important;
-    justify-content: space-between !important;
+    gap: 10px;
+    padding: 15px;
   }
   
-  .mode-btn {
-    flex: 1 1 0 !important;
-    padding: 12px 10px !important;
-    font-size: 0.9rem !important;
-  }
-
-  /* Mobile par 3 dots button dikhayein */
-  .mobile-menu-btn {
-    display: block !important;
-    flex: 0 0 auto !important;
-    background: var(--glass-bg) !important;
-    color: var(--text-primary) !important;
-    border: 1px solid var(--glass-border) !important;
-    font-size: 1.5rem !important;
-    padding: 10px 15px !important;
-    border-radius: 30px !important;
-  }
-
-  /* Mobile dropdown menu */
-  .more-tools-menu {
-    display: none !important;
-    flex-direction: column !important;
-    position: absolute !important;
-    top: 60px !important;
-    right: 20px !important;
-    background: var(--glass-bg) !important;
-    backdrop-filter: blur(20px) !important;
-    border: 1px solid var(--glass-border) !important;
-    border-radius: 15px !important;
-    padding: 10px !important;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important;
-    z-index: 10000 !important;
-    min-width: 200px !important;
-  }
-
-  .more-tools-menu.show-menu {
-    display: flex !important;
-  }
-
-  .more-tools-menu .btn {
-    width: 100% !important;
-    margin-bottom: 5px !important;
-    justify-content: flex-start !important;
+  .unit-selector select {
+    width: 100%;
+    text-align: center;
+    background-position: right 15px center;
   }
 }

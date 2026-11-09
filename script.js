@@ -1,5 +1,5 @@
 /* ============================================================
-   DIGITAL CALCULATOR -
+   DIGITAL CALCULATOR - FINAL PERFECT SCRIPT (PART 1)
    ============================================================ */
 
 // ==================== 1. SHAPES DATABASE ====================
@@ -104,15 +104,13 @@ const SHAPES = {
   hemisphere: {
     type: '3D', name: 'Hemisphere', formula: 'Volume = (2/3)πr³ | Surface Area = 3πr²',
     fields: [{ key: 'radius', label: 'Radius', placeholder: 'e.g. 5' }],
-    area: (v) => (2 / 3) * Math.PI * v.radius * v.radius * v.radius, 
-    perimeter: (v) => 3 * Math.PI * v.radius * v.radius,
+    area: (v) => (2 / 3) * Math.PI * v.radius * v.radius * v.radius, perimeter: (v) => 3 * Math.PI * v.radius * v.radius,
     explanation: { title: '🌗 Hemisphere', howItWorks: 'Half sphere.', areaExplained: '(2/3)πr³', perimeterExplained: '3πr²', example: { inputs: '5 cm', area: '261.80 cm³', perimeter: '235.62 cm²' } }
   },
   torus: {
     type: '3D', name: 'Torus', formula: 'Volume = 2π²Rr² | Surface Area = 4π²Rr',
     fields: [{ key: 'R', label: 'Major Radius (R)', placeholder: 'e.g. 10' }, { key: 'r', label: 'Minor Radius (r)', placeholder: 'e.g. 2' }],
-    area: (v) => 2 * Math.PI * Math.PI * v.R * v.r * v.r, 
-    perimeter: (v) => 4 * Math.PI * Math.PI * v.R * v.r,
+    area: (v) => 2 * Math.PI * Math.PI * v.R * v.r * v.r, perimeter: (v) => 4 * Math.PI * Math.PI * v.R * v.r,
     explanation: { title: '🍩 Torus', howItWorks: 'Donut shape.', areaExplained: '2π²Rr²', perimeterExplained: '4π²Rr', example: { inputs: 'R=10, r=2', area: '789.56 cm³', perimeter: '789.56 cm²' } }
   }
 };
@@ -138,7 +136,7 @@ const CONVERSION_DATA = {
     units: { sec: 'Seconds', min: 'Minutes', hr: 'Hours', day: 'Days' },
     rates: { sec: 1, min: 60, hr: 3600, day: 86400 }
   }
-};// ==================== 3. DOM & GLOBAL VARIABLES ====================
+};// ==================== 3. GLOBAL VARIABLES & DOM ====================
 const inputFieldsDiv = document.getElementById('inputFields');
 const formulaHintEl = document.getElementById('formulaHint');
 const resultAreaEl = document.getElementById('resultArea');
@@ -155,6 +153,7 @@ let soundEnabled = true;
 let audioCtx = null;
 let sciExpression = "";
 let deferredPrompt;
+let exchangeRates = {};
 
 // ==================== 4. HELPER FUNCTIONS ====================
 function hideError() { errorBox.classList.add('hidden'); }
@@ -185,7 +184,9 @@ function speakResult(text) {
     utterance.lang = 'en-US'; utterance.rate = 0.9; utterance.pitch = 1.2; utterance.volume = 1.0;
     setTimeout(() => { window.speechSynthesis.speak(utterance); }, 400);
   }
-}// ==================== 5. SHAPE CALCULATOR LOGIC ====================
+}
+
+// ==================== 5. SHAPES LOGIC ====================
 function renderInputs(shapeKey) {
   const shape = SHAPES[shapeKey];
   if (!shape) return;
@@ -269,7 +270,7 @@ function switchShape(shapeKey) {
   if (explanationVisible) renderExplanation();
 }
 
-// ==================== 6. SCIENTIFIC CALCULATOR LOGIC ====================
+// ==================== 6. SCIENTIFIC CALCULATOR ====================
 function updateSciDisplay() { const d = document.getElementById('sciDisplay'); if (d) d.value = sciExpression; }
 function sciInput(val) { sciExpression += val; updateSciDisplay(); }
 function sciClear() { sciExpression = ""; updateSciDisplay(); }
@@ -277,7 +278,6 @@ function sciDelete() { sciExpression = sciExpression.slice(0, -1); updateSciDisp
 function sciCalculate() {
   try {
     function factorial(n) { if (n === 0 || n === 1) return 1; let r = 1; for (let i = 2; i <= n; i++) r *= i; return r; }
-    
     let evalString = sciExpression
       .replace(/sin⁻¹\(/g, 'Math.asin(').replace(/asin\(/g, 'Math.asin(')
       .replace(/cos⁻¹\(/g, 'Math.acos(').replace(/acos\(/g, 'Math.acos(')
@@ -285,11 +285,8 @@ function sciCalculate() {
       .replace(/sin\(/g, 'Math.sin(').replace(/cos\(/g, 'Math.cos(').replace(/tan\(/g, 'Math.tan(')
       .replace(/log\(/g, 'Math.log10(').replace(/√\(/g, 'Math.sqrt(')
       .replace(/π/g, 'Math.PI').replace(/\^/g, '**');
-
     evalString = evalString.replace(/(\d+)!/g, 'factorial($1)');
-
     let result = Function('"use strict";return (' + evalString + ', factorial)')(factorial);
-    
     sciExpression = (isNaN(result) || !isFinite(result)) ? "Error" : (Number.isInteger(result) ? result.toString() : result.toFixed(4).replace(/\.?0+$/, ''));
     updateSciDisplay();
   } catch (error) { sciExpression = "Error"; updateSciDisplay(); }
@@ -304,7 +301,6 @@ function updateConverterUnits() {
   if (category === 'data') toSelect.value = 'MB'; if (category === 'time') toSelect.value = 'hr';
   convertUnit();
 }
-
 function convertUnit() {
   const category = document.getElementById('convCategory').value;
   const inputVal = parseFloat(document.getElementById('convInput').value);
@@ -321,16 +317,74 @@ function convertUnit() {
   outputField.value = Number(result.toFixed(5)).toString();
 }
 
-function setupUnitConverter() {
-  const convBtn = document.getElementById('unitConvBtn'); const closeConvBtn = document.getElementById('closeConvBtn');
-  const convPanel = document.getElementById('unitConverterPanel'); const mainGroups = document.querySelectorAll('.shape-group');
-  const topBar = document.querySelector('.top-bar'); const unitSel = document.querySelector('.unit-selector');
-  const normalCalc = document.querySelector('main.calculator');
-  if (convBtn) { convBtn.addEventListener('click', () => { convPanel.classList.remove('hidden'); normalCalc.classList.add('hidden'); mainGroups.forEach(g => g.classList.add('hidden')); if(topBar) topBar.classList.add('hidden'); if(unitSel) unitSel.classList.add('hidden'); updateConverterUnits(); }); }
-  if (closeConvBtn) { closeConvBtn.addEventListener('click', () => { convPanel.classList.add('hidden'); normalCalc.classList.remove('hidden'); mainGroups.forEach(g => g.classList.remove('hidden')); if(topBar) topBar.classList.remove('hidden'); if(unitSel) unitSel.classList.remove('hidden'); }); }
+// ==================== 8. RATIO LOGIC ====================
+function gcd(a, b) { return b === 0 ? a : gcd(b, a % b); }
+function calculateRatio() {
+  const inputText = document.getElementById('ratioInputs').value.trim();
+  const resultField = document.getElementById('ratioResult');
+  if (!inputText) { resultField.textContent = "⚠️ Enter numbers"; return; }
+  const nums = inputText.split(/[\s,]+/).map(Number);
+  if (nums.some(isNaN) || nums.length < 2) { resultField.textContent = "⚠️ Enter at least 2 valid numbers"; return; }
+  if (nums.includes(0)) { resultField.textContent = "⚠️ Numbers cannot be zero"; return; }
+  let currentGcd = nums[0];
+  for (let i = 1; i < nums.length; i++) { currentGcd = gcd(currentGcd, nums[i]); }
+  resultField.textContent = nums.map(n => n / currentGcd).join(' : ');
 }
 
-// ==================== 8. UI & SETTINGS ====================
+// ==================== 9. PERCENTAGE LOGIC ====================
+function calculatePercentage() {
+  const obtained = parseFloat(document.getElementById('percObtained').value);
+  const total = parseFloat(document.getElementById('percTotal').value);
+  const resultField = document.getElementById('percentageResult');
+  if (isNaN(obtained) || isNaN(total) || total === 0) { resultField.textContent = "⚠️ Enter valid numbers"; resultField.style.color = "#ff4b2b"; return; }
+  resultField.textContent = Number(((obtained / total) * 100).toFixed(2)) + "%";
+  resultField.style.color = "var(--text-accent)";
+}// ==================== 10. LOGARITHM LOGIC ====================
+function calculateLog() {
+  const type = document.getElementById('logType').value;
+  const num = parseFloat(document.getElementById('logNumber').value);
+  const resultField = document.getElementById('logResult');
+  if (isNaN(num) || num <= 0) { resultField.textContent = "⚠️ Enter positive number"; return; }
+  let result = 0;
+  if (type === 'log10') result = Math.log10(num);
+  else if (type === 'ln') result = Math.log(num);
+  else if (type === 'log2') result = Math.log2(num);
+  else if (type === 'custom') {
+    const base = parseFloat(document.getElementById('logBase').value);
+    if (isNaN(base) || base <= 0 || base === 1) { resultField.textContent = "⚠️ Invalid Base"; return; }
+    result = Math.log(num) / Math.log(base);
+  }
+  resultField.textContent = Number(result.toFixed(4));
+}
+
+// ==================== 11. CURRENCY LOGIC ====================
+async function fetchExchangeRates() {
+  const rateInfo = document.getElementById('currencyRateInfo');
+  if(rateInfo) { rateInfo.textContent = "Fetching live rates..."; rateInfo.style.color = "var(--text-secondary)"; }
+  try {
+    const response = await fetch('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json');
+    const data = await response.json();
+    if (data && data.usd) {
+      exchangeRates = data.usd;
+      if(rateInfo) rateInfo.textContent = "Live rates loaded successfully!";
+      convertCurrency(); 
+    }
+  } catch (error) {
+    if(rateInfo) { rateInfo.textContent = "⚠️ Failed to load rates. Check internet."; rateInfo.style.color = "#ff4b2b"; }
+  }
+}
+
+function convertCurrency() {
+  const amount = parseFloat(document.getElementById('currAmount').value);
+  const fromCurr = document.getElementById('currFrom').value.toLowerCase(); 
+  const toCurr = document.getElementById('currTo').value.toLowerCase();     
+  const resultField = document.getElementById('currencyResult');
+  if (isNaN(amount) || amount <= 0) { resultField.textContent = "—"; return; }
+  if (!exchangeRates[fromCurr] || !exchangeRates[toCurr]) { resultField.textContent = "⏳ Loading rates..."; return; }
+  const amountInUSD = amount / exchangeRates[fromCurr];
+  const convertedAmount = amountInUSD * exchangeRates[toCurr];
+  resultField.textContent = `${fromCurr.toUpperCase()} ${amount} = ${toCurr.toUpperCase()} ${Number(convertedAmount.toFixed(2))}`;
+}// ==================== 12. UI FEATURES ====================
 function setupThemeToggle() {
   const toggleBtn = document.getElementById('themeToggle'); if (!toggleBtn) return;
   const toggleIcon = toggleBtn.querySelector('.toggle-icon'); const toggleText = toggleBtn.querySelector('.toggle-text');
@@ -372,21 +426,12 @@ function renderExplanation() {
 
 function setupPrintAndCopy() {
   const printBtn = document.getElementById('btnPrint'); if (printBtn) printBtn.addEventListener('click', () => window.print());
-  const copyText = (text) => {
-    if (text && text !== '—') { navigator.clipboard.writeText(text).then(() => alert('📋 Result Copied: ' + text)).catch(() => alert('Copy failed.')); } 
-    else { alert('⚠️ Please calculate a result first!'); }
-  };
+  const copyText = (text) => { if (text && text !== '—') { navigator.clipboard.writeText(text).then(() => alert('📋 Copied: ' + text)).catch(() => alert('Copy failed.')); } else { alert('⚠️ Calculate first!'); } };
   const copyAreaBtn = document.getElementById('copyAreaBtn'); const copyPerimBtn = document.getElementById('copyPerimeterBtn');
   if (copyAreaBtn) copyAreaBtn.addEventListener('click', () => copyText(document.getElementById('resultArea').textContent));
   if (copyPerimBtn) copyPerimBtn.addEventListener('click', () => copyText(document.getElementById('resultPerimeter').textContent));
-
   const soundBtn = document.getElementById('soundToggle'); const soundIcon = document.getElementById('soundIcon'); const soundText = document.getElementById('soundText');
-  if (soundBtn) {
-    soundBtn.addEventListener('click', () => {
-      soundEnabled = !soundEnabled; soundIcon.textContent = soundEnabled ? '🔊' : '🔇'; soundText.textContent = soundEnabled ? 'Sound On' : 'Sound Off';
-      if (soundEnabled) playClick(); else window.speechSynthesis.cancel(); 
-    });
-  }
+  if (soundBtn) { soundBtn.addEventListener('click', () => { soundEnabled = !soundEnabled; soundIcon.textContent = soundEnabled ? '🔊' : '🔇'; soundText.textContent = soundEnabled ? 'Sound On' : 'Sound Off'; if (soundEnabled) playClick(); else window.speechSynthesis.cancel(); }); }
   document.querySelectorAll('button').forEach(btn => { btn.addEventListener('click', () => { setTimeout(playClick, 50); }); });
 }
 
@@ -406,13 +451,31 @@ async function changeLanguage(targetLang) {
   } catch (error) { console.log("Translation error:", error); } finally { langSelect.options[langSelect.selectedIndex].text = originalText; }
 }
 
-window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; const installBtn = document.getElementById('installAppBtn'); if (installBtn) installBtn.classList.remove('hidden'); });
-document.addEventListener('DOMContentLoaded', () => {
-  const installBtn = document.getElementById('installAppBtn');
-  if (installBtn) { installBtn.addEventListener('click', async () => { if (!deferredPrompt) return; deferredPrompt.prompt(); const { outcome } = await deferredPrompt.userChoice; deferredPrompt = null; installBtn.classList.add('hidden'); }); }
-});
+// ==================== 13. PANEL CONTROLS ====================
+function closeAllPanels() {
+  const panels = ['scientificPanel','unitConverterPanel','ratioCalculatorPanel','percentageCalculatorPanel','logCalculatorPanel','currencyCalculatorPanel'];
+  panels.forEach(id => { const el = document.getElementById(id); if (el) el.classList.add('hidden'); });
+  const normalCalc = document.querySelector('main.calculator'); const mainGroups = document.querySelectorAll('.shape-group');
+  const topBar = document.querySelector('.top-bar'); const unitSel = document.querySelector('.unit-selector');
+  if (normalCalc) normalCalc.classList.remove('hidden'); mainGroups.forEach(g => g.classList.remove('hidden'));
+  if (topBar) topBar.classList.remove('hidden'); if (unitSel) unitSel.classList.remove('hidden');
+}
 
-// ==================== 9. MAIN INIT ====================
+function setupUnitConverter() { const btn = document.getElementById('unitConvBtn'); const close = document.getElementById('closeConvBtn'); const panel = document.getElementById('unitConverterPanel'); if(btn) btn.addEventListener('click', () => { closeAllPanels(); panel.classList.remove('hidden'); document.querySelector('main.calculator').classList.add('hidden'); document.querySelectorAll('.shape-group').forEach(g=>g.classList.add('hidden')); document.querySelector('.top-bar').classList.add('hidden'); document.querySelector('.unit-selector').classList.add('hidden'); updateConverterUnits(); }); if(close) close.addEventListener('click', closeAllPanels); }
+function setupRatioCalculator() { const btn = document.getElementById('ratioCalcBtn'); const close = document.getElementById('closeRatioBtn'); const panel = document.getElementById('ratioCalculatorPanel'); if(btn) btn.addEventListener('click', () => { closeAllPanels(); panel.classList.remove('hidden'); document.querySelector('main.calculator').classList.add('hidden'); document.querySelectorAll('.shape-group').forEach(g=>g.classList.add('hidden')); document.querySelector('.top-bar').classList.add('hidden'); document.querySelector('.unit-selector').classList.add('hidden'); document.getElementById('ratioInputs').value=''; document.getElementById('ratioResult').textContent='—'; }); if(close) close.addEventListener('click', closeAllPanels); }
+function setupPercentageCalculator() { const btn = document.getElementById('percentageCalcBtn'); const close = document.getElementById('closePercentageBtn'); const panel = document.getElementById('percentageCalculatorPanel'); if(btn) btn.addEventListener('click', () => { closeAllPanels(); panel.classList.remove('hidden'); document.querySelector('main.calculator').classList.add('hidden'); document.querySelectorAll('.shape-group').forEach(g=>g.classList.add('hidden')); document.querySelector('.top-bar').classList.add('hidden'); document.querySelector('.unit-selector').classList.add('hidden'); document.getElementById('percObtained').value=''; document.getElementById('percTotal').value=''; document.getElementById('percentageResult').textContent='—'; }); if(close) close.addEventListener('click', closeAllPanels); }
+function setupLogCalculator() { const btn = document.getElementById('logCalcBtn'); const close = document.getElementById('closeLogBtn'); const panel = document.getElementById('logCalculatorPanel'); const type = document.getElementById('logType'); const customBase = document.getElementById('customBaseDiv'); if(type) type.addEventListener('change', () => { customBase.style.display = type.value === 'custom' ? 'block' : 'none'; }); if(btn) btn.addEventListener('click', () => { closeAllPanels(); panel.classList.remove('hidden'); document.querySelector('main.calculator').classList.add('hidden'); document.querySelectorAll('.shape-group').forEach(g=>g.classList.add('hidden')); document.querySelector('.top-bar').classList.add('hidden'); document.querySelector('.unit-selector').classList.add('hidden'); document.getElementById('logNumber').value=''; document.getElementById('logBase').value=''; document.getElementById('logResult').textContent='—'; }); if(close) close.addEventListener('click', closeAllPanels); }
+function setupCurrencyCalculator() { const btn = document.getElementById('currencyCalcBtn'); const mobileBtn = document.getElementById('mobileCurrencyBtn'); const close = document.getElementById('closeCurrencyBtn'); const panel = document.getElementById('currencyCalculatorPanel'); const open = () => { closeAllPanels(); panel.classList.remove('hidden'); document.querySelector('main.calculator').classList.add('hidden'); document.querySelectorAll('.shape-group').forEach(g=>g.classList.add('hidden')); document.querySelector('.top-bar').classList.add('hidden'); document.querySelector('.unit-selector').classList.add('hidden'); fetchExchangeRates(); }; if(btn) btn.addEventListener('click', open); if(mobileBtn) mobileBtn.addEventListener('click', open); if(close) close.addEventListener('click', closeAllPanels); }// ==================== 14. MOBILE MENU ====================
+function setupMobileMenu() {
+  const btn = document.getElementById('mobileMenuBtn'); const menu = document.getElementById('moreToolsMenu');
+  if (btn && menu) {
+    btn.addEventListener('click', (e) => { e.stopPropagation(); menu.classList.toggle('show-menu'); });
+    document.addEventListener('click', (e) => { if (!menu.contains(e.target) && e.target !== btn) menu.classList.remove('show-menu'); });
+    menu.querySelectorAll('.btn').forEach(b => b.addEventListener('click', () => menu.classList.remove('show-menu')));
+  }
+}
+
+// ==================== 15. MAIN INIT ====================
 function init() {
   shapeBtns.forEach(btn => btn.addEventListener('click', () => switchShape(btn.dataset.shape)));
   document.getElementById('btnArea').addEventListener('click', calculateArea);
@@ -420,292 +483,18 @@ function init() {
   document.getElementById('btnClear').addEventListener('click', clearAll);
 
   const sciModeBtn = document.getElementById('sciModeBtn'); const closeSciBtn = document.getElementById('closeSciBtn');
-  const sciPanel = document.getElementById('scientificPanel'); const mainGroups = document.querySelectorAll('.shape-group');
-  const topBar = document.querySelector('.top-bar'); const unitSel = document.querySelector('.unit-selector');
-  
-  if (sciModeBtn) { sciModeBtn.addEventListener('click', () => { sciPanel.classList.remove('hidden'); document.querySelector('main.calculator').classList.add('hidden'); mainGroups.forEach(g => g.classList.add('hidden')); if(topBar) topBar.classList.add('hidden'); if(unitSel) unitSel.classList.add('hidden'); }); }
-  if (closeSciBtn) { closeSciBtn.addEventListener('click', () => { sciPanel.classList.add('hidden'); document.querySelector('main.calculator').classList.remove('hidden'); mainGroups.forEach(g => g.classList.remove('hidden')); if(topBar) topBar.classList.remove('hidden'); if(unitSel) unitSel.classList.remove('hidden'); }); }
+  const sciPanel = document.getElementById('scientificPanel');
+  if (sciModeBtn) { sciModeBtn.addEventListener('click', () => { closeAllPanels(); sciPanel.classList.remove('hidden'); document.querySelector('main.calculator').classList.add('hidden'); document.querySelectorAll('.shape-group').forEach(g => g.classList.add('hidden')); document.querySelector('.top-bar').classList.add('hidden'); document.querySelector('.unit-selector').classList.add('hidden'); }); }
+  if (closeSciBtn) { closeSciBtn.addEventListener('click', closeAllPanels); }
 
   setupThemeToggle(); setupHistory(); setupUnitSelector(); setupExplanation(); setupPrintAndCopy();
-  setupUnitConverter(); setupRatioCalculator();   setupLogCalculator(); 
-  setupMobileMenu();  setupPercentageCalculator();  switchShape('rectangle');
-}
-// ==================== 11. RATIO CALCULATOR LOGIC ====================
-function gcd(a, b) {
-  return b === 0 ? a : gcd(b, a % b);
-}
-
-function calculateRatio() {
-  const inputField = document.getElementById('ratioInputs');
-  const resultField = document.getElementById('ratioResult');
-  const inputText = inputField.value.trim();
-
-  if (!inputText) {
-    resultField.textContent = "⚠️ Please enter numbers";
-    return;
-  }
-
-  const nums = inputText.split(/[\s,]+/).map(Number);
-
-  if (nums.some(isNaN) || nums.length < 2) {
-    resultField.textContent = "⚠️ Enter at least 2 valid numbers";
-    return;
-  }
-
-  if (nums.includes(0)) {
-    resultField.textContent = "⚠️ Numbers cannot be zero";
-    return;
-  }
-
-  let currentGcd = nums[0];
-  for (let i = 1; i < nums.length; i++) {
-    currentGcd = gcd(currentGcd, nums[i]);
-  }
-
-  const simplifiedRatio = nums.map(n => n / currentGcd).join(' : ');
-  resultField.textContent = simplifiedRatio;
+  setupUnitConverter(); setupRatioCalculator(); setupPercentageCalculator(); setupLogCalculator(); setupCurrencyCalculator();
+  setupMobileMenu();
+  
+  closeAllPanels();
+  switchShape('rectangle');
 }
 
-function setupRatioCalculator() {
-  const ratioBtn = document.getElementById('ratioCalcBtn');
-  const closeRatioBtn = document.getElementById('closeRatioBtn');
-  const ratioPanel = document.getElementById('ratioCalculatorPanel');
-  const mainGroups = document.querySelectorAll('.shape-group');
-  const topBar = document.querySelector('.top-bar');
-  const unitSel = document.querySelector('.unit-selector');
-  const normalCalc = document.querySelector('main.calculator');
-
-  if (ratioBtn) {
-    ratioBtn.addEventListener('click', () => {
-      ratioPanel.classList.remove('hidden');
-      normalCalc.classList.add('hidden');
-      mainGroups.forEach(g => g.classList.add('hidden'));
-      if(topBar) topBar.classList.add('hidden'); 
-      if(unitSel) unitSel.classList.add('hidden');
-      document.getElementById('ratioInputs').value = '';
-      document.getElementById('ratioResult').textContent = '—';
-    });
-  }
-
-  if (closeRatioBtn) {
-    closeRatioBtn.addEventListener('click', () => {
-      ratioPanel.classList.add('hidden');
-      normalCalc.classList.remove('hidden');
-      mainGroups.forEach(g => g.classList.remove('hidden'));
-      if(topBar) topBar.classList.remove('hidden'); 
-      if(unitSel) unitSel.classList.remove('hidden');
-    });
-  }
-}
-// ==================== 14. MOBILE MENU LOGIC (FIXED) ====================
-function setupMobileMenu() {
-  const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-  const moreToolsMenu = document.getElementById('moreToolsMenu');
-
-  if (mobileMenuBtn && moreToolsMenu) {
-    // 3 dots par click karne se menu open/close ho
-    mobileMenuBtn.addEventListener('click', (e) => {
-      e.stopPropagation(); 
-      moreToolsMenu.classList.toggle('show-menu');
-    });
-
-    // Agar user screen par kisi aur jagah click kare to menu band ho jaye
-    document.addEventListener('click', (e) => {
-      if (!moreToolsMenu.contains(e.target) && e.target !== mobileMenuBtn) {
-        moreToolsMenu.classList.remove('show-menu');
-      }
-    });
-
-    // 🌟 ASAL FIX: Jab menu ke andar kisi bhi tool par click ho, toh menu khud band ho jaye
-    const menuButtons = moreToolsMenu.querySelectorAll('.btn');
-    menuButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        moreToolsMenu.classList.remove('show-menu');
-      });
-    });
-  }
-}// ==================== 12. PERCENTAGE CALCULATOR LOGIC ====================
-function calculatePercentage() {
-  const obtained = parseFloat(document.getElementById('percObtained').value);
-  const total = parseFloat(document.getElementById('percTotal').value);
-  const resultField = document.getElementById('percentageResult');
-
-  if (isNaN(obtained) || isNaN(total) || total === 0) {
-    resultField.textContent = "⚠️ Enter valid numbers";
-    resultField.style.color = "#ff4b2b";
-    return;
-  }
-
-  const percentage = (obtained / total) * 100;
-  resultField.textContent = Number(percentage.toFixed(2)) + "%";
-  resultField.style.color = "var(--text-accent)";
-}
-
-function setupPercentageCalculator() {
-  const percBtn = document.getElementById('percentageCalcBtn');
-  const closePercBtn = document.getElementById('closePercentageBtn');
-  const percPanel = document.getElementById('percentageCalculatorPanel');
-  const mainGroups = document.querySelectorAll('.shape-group');
-  const topBar = document.querySelector('.top-bar');
-  const unitSel = document.querySelector('.unit-selector');
-  const normalCalc = document.querySelector('main.calculator');
-
-  if (percBtn) {
-    percBtn.addEventListener('click', () => {
-      percPanel.classList.remove('hidden');
-      normalCalc.classList.add('hidden');
-      mainGroups.forEach(g => g.classList.add('hidden'));
-      if(topBar) topBar.classList.add('hidden'); 
-      if(unitSel) unitSel.classList.add('hidden');
-      document.getElementById('percObtained').value = '';
-      document.getElementById('percTotal').value = '';
-      document.getElementById('percentageResult').textContent = '—';
-      
-      // Mobile menu ko band karne ke liye
-      const moreToolsMenu = document.getElementById('moreToolsMenu');
-      if(moreToolsMenu) moreToolsMenu.classList.remove('show-menu');
-    });
-  }
-
-  if (closePercBtn) {
-    closePercBtn.addEventListener('click', () => {
-      percPanel.classList.add('hidden');
-      normalCalc.classList.remove('hidden');
-      mainGroups.forEach(g => g.classList.remove('hidden'));
-      if(topBar) topBar.classList.remove('hidden'); 
-      if(unitSel) unitSel.classList.remove('hidden');
-    });
-  }
-}
-// ==================== 13. LOGARITHM CALCULATOR LOGIC ====================
-function calculateLog() {
-  const type = document.getElementById('logType').value;
-  const num = parseFloat(document.getElementById('logNumber').value);
-  const resultField = document.getElementById('logResult');
-
-  if (isNaN(num) || num <= 0) {
-    resultField.textContent = "⚠️ Enter valid positive number";
-    resultField.style.color = "#ff4b2b";
-    return;
-  }
-
-  let result = 0;
-
-  if (type === 'log10') {
-    result = Math.log10(num);
-  } else if (type === 'ln') {
-    result = Math.log(num);
-  } else if (type === 'log2') {
-    result = Math.log2(num);
-  } else if (type === 'custom') {
-    const base = parseFloat(document.getElementById('logBase').value);
-    if (isNaN(base) || base <= 0 || base === 1) {
-      resultField.textContent = "⚠️ Invalid Base";
-      resultField.style.color = "#ff4b2b";
-      return;
-    }
-    result = Math.log(num) / Math.log(base);
-  }
-
-  resultField.textContent = Number(result.toFixed(4));
-  resultField.style.color = "var(--text-accent)";
-}
-
-function setupLogCalculator() {
-  const logBtn = document.getElementById('logCalcBtn');
-  const closeLogBtn = document.getElementById('closeLogBtn');
-  const logPanel = document.getElementById('logCalculatorPanel');
-  const mainGroups = document.querySelectorAll('.shape-group');
-  const topBar = document.querySelector('.top-bar');
-  const unitSel = document.querySelector('.unit-selector');
-  const normalCalc = document.querySelector('main.calculator');
-  const logType = document.getElementById('logType');
-  const customBaseDiv = document.getElementById('customBaseDiv');
-
-  if (logType) {
-    logType.addEventListener('change', () => {
-      if (logType.value === 'custom') {
-        customBaseDiv.style.display = 'block';
-      } else {
-        customBaseDiv.style.display = 'none';
-      }
-    });
-  }
-
-  if (logBtn) {
-    logBtn.addEventListener('click', () => {
-      logPanel.classList.remove('hidden');
-      normalCalc.classList.add('hidden');
-      mainGroups.forEach(g => g.classList.add('hidden'));
-      if(topBar) topBar.classList.add('hidden'); 
-      if(unitSel) unitSel.classList.add('hidden');
-      
-      document.getElementById('logNumber').value = '';
-      document.getElementById('logBase').value = '';
-      document.getElementById('logResult').textContent = '—';
-      
-      const moreToolsMenu = document.getElementById('moreToolsMenu');
-      if(moreToolsMenu) moreToolsMenu.classList.remove('show-menu');
-    });
-  }
-
-  if (closeLogBtn) {
-    closeLogBtn.addEventListener('click', () => {
-      logPanel.classList.add('hidden');
-      normalCalc.classList.remove('hidden');
-      mainGroups.forEach(g => g.classList.remove('hidden'));
-      if(topBar) topBar.classList.remove('hidden'); 
-      if(unitSel) unitSel.classList.remove('hidden');
-    });
-  }
-}
-// ==================== 15. CLOSE ALL PANELS (FIX FOR OVERLAPPING) ====================
-function closeAllPanels() {
-  // Saare calculators ke panels ki list
-  const panels = [
-    'scientificPanel', 
-    'unitConverterPanel', 
-    'ratioCalculatorPanel', 
-    'percentageCalculatorPanel', 
-    'logCalculatorPanel'
-  ];
-
-  // Har panel ko dhoond kar chhupa dein
-  panels.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.classList.add('hidden');
-  });
-
-  // Normal calculator aur shapes ko wapas dikhayein
-  const normalCalc = document.querySelector('main.calculator');
-  const mainGroups = document.querySelectorAll('.shape-group');
-  const topBar = document.querySelector('.top-bar');
-  const unitSel = document.querySelector('.unit-selector');
-
-  if (normalCalc) normalCalc.classList.remove('hidden');
-  mainGroups.forEach(g => g.classList.remove('hidden'));
-  if (topBar) topBar.classList.remove('hidden');
-  if (unitSel) unitSel.classList.remove('hidden');
-}
-// ==================== 16. AUTO-CLOSE PANELS FIX ====================
-document.addEventListener('DOMContentLoaded', () => {
-  // Saare buttons jinse panels khulte hain
-  const toolButtons = [
-    'sciModeBtn', 
-    'unitConvBtn', 
-    'ratioCalcBtn', 
-    'percentageCalcBtn', 
-    'logCalcBtn'
-  ];
-
-  toolButtons.forEach(btnId => {
-    const btn = document.getElementById(btnId);
-    if (btn) {
-      // Jab bhi koi button dabega, pehle saare panel band karo
-      btn.addEventListener('click', closeAllPanels, true); // 'true' ka matlab pehle ye chale
-    }
-  });
-});
 init();
 
 if ('serviceWorker' in navigator) {
