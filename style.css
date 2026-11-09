@@ -492,4 +492,51 @@ body.dark-mode .sci-btn:hover {
 .num-btn {
   background: var(--card-bg);
   font-weight: 800;
+}/* ============================================================
+   MODERN DROPDOWN (LANGUAGE SELECTOR) STYLING
+   ============================================================ */
+
+/* Dropdown Box ki styling */
+#languageSelect {
+  background: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  color: var(--text-primary) !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 30px !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 10px center !important;
+  background-size: 15px !important;
+}
+
+#languageSelect:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+  transform: translateY(-2px);
+}
+
+body.dark-mode #languageSelect {
+  background: rgba(0, 0, 0, 0.3) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2364b5f6'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E") !important;
+}
+
+/* Dropdown ke andar ki list (Options) ki styling */
+#languageSelect option {
+  background-color: #1a1a2e; /* Dark theme background */
+  color: #ffffff;
+  font-weight: 500;
+  padding: 10px;
+}
+
+/* Dropdown jab khula ho */
+#languageSelect:focus {
+  outline: none;
+  border-color: #64b5f6 !important;
+  box-shadow: 0 0 10px rgba(100, 181, 246, 0.5);
 }

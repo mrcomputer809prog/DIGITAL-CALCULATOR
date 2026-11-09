@@ -550,4 +550,23 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js');
   });
+}// ==================== GOOGLE TRANSLATE LANGUAGE CHANGE ====================
+function changeLanguage(langCode) {
+  // Agar English select ki hai, toh original state par wapas aayein
+  if (langCode === 'en') {
+    document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    location.reload();
+    return;
+  }
+
+  // Google Translate ki hidden dropdown ko dhoondein aur language change karein
+  const selectField = document.querySelector('.goog-te-combo');
+  if (selectField) {
+    selectField.value = langCode;
+    selectField.dispatchEvent(new Event('change'));
+  } else {
+    // Agar dropdown load nahi hua, to cookie set karke reload karein
+    document.cookie = "googtrans=/en/" + langCode + "; path=/";
+    location.reload();
+  }
 }
