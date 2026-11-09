@@ -501,9 +501,6 @@ function init() {
   switchShape('rectangle');
 }
 
-init();
-
-init();
 
 // ==================== INSTALL APP LOGIC (PWA) ====================
 let deferredPrompt;
@@ -570,3 +567,5 @@ function changeLanguage(langCode) {
     location.reload();
   }
 }
+
+init();
