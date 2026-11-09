@@ -3,6 +3,102 @@
    ============================================================ */
 
 // ==================== 1. SHAPES DATABASE ====================
+// ==================== UNIT CONVERTER LOGIC ====================
+const CONVERSION_DATA = {
+  length: {
+    units: { m: 'Meter (m)', km: 'Kilometer (km)', cm: 'Centimeter (cm)', mm: 'Millimeter (mm)', in: 'Inch (in)', ft: 'Foot (ft)', mi: 'Mile (mi)' },
+    rates: { m: 1, km: 1000, cm: 0.01, mm: 0.001, in: 0.0254, ft: 0.3048, mi: 1609.34 }
+  },
+  weight: {
+    units: { kg: 'Kilogram (kg)', g: 'Gram (g)', mg: 'Milligram (mg)', lb: 'Pound (lb)', oz: 'Ounce (oz)' },
+    rates: { kg: 1, g: 0.001, mg: 0.000001, lb: 0.453592, oz: 0.0283495 }
+  },
+  temp: {
+    units: { C: 'Celsius (°C)', F: 'Fahrenheit (°F)', K: 'Kelvin (K)' }
+  }
+};
+
+function updateConverterUnits() {
+  const category = document.getElementById('convCategory').value;
+  const fromSelect = document.getElementById('convFrom');
+  const toSelect = document.getElementById('convTo');
+  
+  fromSelect.innerHTML = '';
+  toSelect.innerHTML = '';
+  
+  const units = CONVERSION_DATA[category].units;
+  for (let key in units) {
+    fromSelect.innerHTML += `<option value="${key}">${units[key]}</option>`;
+    toSelect.innerHTML += `<option value="${key}">${units[key]}</option>`;
+  }
+  
+  if (category === 'length') toSelect.value = 'km';
+  if (category === 'weight') toSelect.value = 'g';
+  if (category === 'temp') toSelect.value = 'F';
+  
+  convertUnit();
+}
+
+function convertUnit() {
+  const category = document.getElementById('convCategory').value;
+  const inputVal = parseFloat(document.getElementById('convInput').value);
+  const fromUnit = document.getElementById('convFrom').value;
+  const toUnit = document.getElementById('convTo').value;
+  const outputField = document.getElementById('convOutput');
+
+  if (isNaN(inputVal)) { outputField.value = ''; return; }
+
+  let result = 0;
+
+  if (category === 'temp') {
+    let celsius;
+    if (fromUnit === 'C') celsius = inputVal;
+    else if (fromUnit === 'F') celsius = (inputVal - 32) * 5/9;
+    else if (fromUnit === 'K') celsius = inputVal - 273.15;
+
+    if (toUnit === 'C') result = celsius;
+    else if (toUnit === 'F') result = (celsius * 9/5) + 32;
+    else if (toUnit === 'K') result = celsius + 273.15;
+  } else {
+    const rates = CONVERSION_DATA[category].rates;
+    const baseValue = inputVal * rates[fromUnit];
+    result = baseValue / rates[toUnit];
+  }
+
+  outputField.value = Number(result.toFixed(5)).toString();
+}
+
+function setupUnitConverter() {
+  const convBtn = document.getElementById('unitConvBtn');
+  const closeConvBtn = document.getElementById('closeConvBtn');
+  const convPanel = document.getElementById('unitConverterPanel');
+  const mainGroups = document.querySelectorAll('.shape-group');
+  const topBar = document.querySelector('.top-bar');
+  const unitSel = document.querySelector('.unit-selector');
+  const normalCalc = document.querySelector('main.calculator');
+
+  if (convBtn) {
+    convBtn.addEventListener('click', () => {
+      convPanel.classList.remove('hidden');
+      normalCalc.classList.add('hidden');
+      mainGroups.forEach(g => g.classList.add('hidden'));
+      if(topBar) topBar.classList.add('hidden'); 
+      if(unitSel) unitSel.classList.add('hidden');
+      updateConverterUnits();
+    });
+  }
+
+  if (closeConvBtn) {
+    closeConvBtn.addEventListener('click', () => {
+      convPanel.classList.add('hidden');
+      normalCalc.classList.remove('hidden');
+      mainGroups.forEach(g => g.classList.remove('hidden'));
+      if(topBar) topBar.classList.remove('hidden'); 
+      if(unitSel) unitSel.classList.remove('hidden');
+    });
+  }
+}
+// ==============================================================
 const SHAPES = {
   rectangle: {
     type: '2D', name: 'Rectangle', formula: 'Area = L × W | Perimeter = 2 × (L + W)',
@@ -407,7 +503,7 @@ function init() {
   }
 
   setupThemeToggle(); setupHistory(); setupUnitSelector(); setupExplanation(); setupPrintAndCopy();
-  switchShape('rectangle');
+  setupUnitConverter(); switchShape('rectangle');
 }
 
 init();

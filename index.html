@@ -69,11 +69,46 @@
     <p class="description">A simple, accurate and professional calculator for 2D and 3D geometric shapes.</p>
   </header>
 
-  <!-- ================= SCIENTIFIC CALCULATOR BUTTON ================= -->
-  <div style="text-align: center; margin-bottom: 20px;">
-    <button id="sciModeBtn" class="btn" style="background: linear-gradient(135deg, #8e2de2, #4a00e0); color: white; padding: 15px 40px; font-size: 1.2rem; border-radius: 30px; box-shadow: 0 10px 20px rgba(142, 45, 226, 0.4);">
-      🧮 Open Scientific Calculator
+   <!-- ================= CALCULATOR MODES BUTTONS ================= -->
+  <div style="text-align: center; margin-bottom: 20px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+    <button id="sciModeBtn" class="btn" style="background: linear-gradient(135deg, #8e2de2, #4a00e0); color: white; padding: 15px 30px; font-size: 1.1rem; border-radius: 30px; box-shadow: 0 10px 20px rgba(142, 45, 226, 0.4);">
+      🧮 Scientific Calculator
     </button>
+    
+    <!-- Naya Unit Converter Button -->
+    <button id="unitConvBtn" class="btn" style="background: linear-gradient(135deg, #11998e, #38ef7d); color: white; padding: 15px 30px; font-size: 1.1rem; border-radius: 30px; box-shadow: 0 10px 20px rgba(17, 153, 142, 0.4);">
+      📏 Unit Converter
+    </button>
+  </div>
+    <!-- ================= UNIT CONVERTER PANEL (Hidden by default) ================= -->
+  <div id="unitConverterPanel" class="calculator hidden" style="flex-direction: column; align-items: center; justify-content: center; max-width: 600px; margin: 0 auto 30px auto;">
+    <h2 style="color: var(--text-accent); margin-bottom: 20px;">📏 Universal Unit Converter</h2>
+    
+    <!-- Category Selector -->
+    <div style="display: flex; gap: 10px; margin-bottom: 20px; width: 100%;">
+      <select id="convCategory" class="unit-selector select" style="flex: 1; padding: 12px; border-radius: 12px; font-weight: bold;" onchange="updateConverterUnits()">
+        <option value="length">Length</option>
+        <option value="weight">Weight</option>
+        <option value="temp">Temperature</option>
+      </select>
+    </div>
+
+    <!-- Converter Inputs -->
+    <div style="display: flex; gap: 15px; width: 100%; flex-wrap: wrap; align-items: center;">
+      <div style="flex: 1; min-width: 200px;">
+        <input type="number" id="convInput" placeholder="Enter value" style="width: 100%; padding: 15px; border-radius: 12px; border: 2px solid var(--input-border); background: var(--input-bg); color: var(--text-primary); font-size: 1.2rem; outline: none;" oninput="convertUnit()">
+        <select id="convFrom" class="unit-selector select" style="width: 100%; margin-top: 10px; padding: 10px; border-radius: 10px;" onchange="convertUnit()"></select>
+      </div>
+      
+      <div style="font-size: 1.5rem; color: var(--text-accent); font-weight: bold;">=</div>
+      
+      <div style="flex: 1; min-width: 200px;">
+        <input type="text" id="convOutput" readonly placeholder="Result" style="width: 100%; padding: 15px; border-radius: 12px; border: 2px solid var(--glass-border); background: var(--result-bg); color: var(--text-accent); font-size: 1.2rem; font-weight: bold; outline: none;">
+        <select id="convTo" class="unit-selector select" style="width: 100%; margin-top: 10px; padding: 10px; border-radius: 10px;" onchange="convertUnit()"></select>
+      </div>
+    </div>
+    
+    <button id="closeConvBtn" class="btn" style="margin-top: 25px; background: #ff4b2b; color: white; width: 100%;">Close Converter</button>
   </div>
 
   <!-- ================= SCIENTIFIC CALCULATOR PANEL ================= -->
