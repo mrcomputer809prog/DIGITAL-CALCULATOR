@@ -740,13 +740,24 @@ function initEvents() {
 }
 
 
-// ========== 13. START ==========
+// ========== 14. PRINT FUNCTION ==========
+function setupPrint() {
+  const printBtn = document.getElementById('btnPrint');
+  if (printBtn) {
+    printBtn.addEventListener('click', () => {
+      window.print();
+    });
+  }
+}
+
+// ========== 15. START PROGRAM ==========
 function init() {
   initEvents();
   setupThemeToggle();
   setupHistory();
   setupUnitSelector();
   setupExplanation();
+  setupPrint(); 
   switchShape('rectangle');
 }
 

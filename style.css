@@ -961,4 +961,12 @@ body.dark-mode #shapeNav3D .shape-btn.active {
   .shape-group-title {
     font-size: 0.9rem;
   }
+}/* Print Button Style */
+.btn-print {
+  background: #8e24aa;
+  color: white;
+}
+.btn-print:hover {
+  background: #6a1b9a;
+  transform: translateY(-2px);
 }
