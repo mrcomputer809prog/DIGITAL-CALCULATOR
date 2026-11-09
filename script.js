@@ -1,10 +1,11 @@
 /* ============================================================
-   GEOMETRIC SHAPES CALCULATOR — JAVASCRIPT (V6 FINAL)
-   All Features + Text-to-Speech (Bolne wala) + Sound
+   Digital  CALCULATOR — JAVASCRIPT (FINAL MEGA VERSION)
+   2D/3D Shapes + Scientific Calculator + Voice + Sound + History
    ============================================================ */
 
+// ==================== 1. SHAPES DATABASE ====================
 const SHAPES = {
-  // ==================== 2D SHAPES ====================
+  // 2D SHAPES
   rectangle: {
     type: '2D', name: 'Rectangle', formula: 'Area = L × W | Perimeter = 2 × (L + W)',
     fields: [{ key: 'length', label: 'Length', placeholder: 'e.g. 5' }, { key: 'width', label: 'Width', placeholder: 'e.g. 3' }],
@@ -66,8 +67,7 @@ const SHAPES = {
     perimeter: (v) => { const a = v.a, b = v.b; return Math.PI * (3 * (a + b) - Math.sqrt((3 * a + b) * (a + 3 * b))); },
     explanation: { title: '⬭ Ellipse', howItWorks: 'Stretched circle.', areaExplained: 'πab', perimeterExplained: 'Approx formula', example: { inputs: '8, 5 cm', area: '125.66 cm²', perimeter: '41.39 cm' } }
   },
-
-  // ==================== 3D SHAPES ====================
+  // 3D SHAPES
   cube: {
     type: '3D', name: 'Cube', formula: 'Volume = s³ | Surface Area = 6s²',
     fields: [{ key: 'side', label: 'Side', placeholder: 'e.g. 4' }],
@@ -106,7 +106,58 @@ const SHAPES = {
   }
 };
 
-// DOM Elements
+
+// ==================== 2. SCIENTIFIC CALCULATOR LOGIC ====================
+let sciExpression = "";
+
+function updateSciDisplay() {
+  const display = document.getElementById('sciDisplay');
+  if (display) display.value = sciExpression;
+}
+
+function sciInput(val) {
+  sciExpression += val;
+  updateSciDisplay();
+}
+
+function sciClear() {
+  sciExpression = "";
+  updateSciDisplay();
+}
+
+function sciDelete() {
+  sciExpression = sciExpression.slice(0, -1);
+  updateSciDisplay();
+}
+
+function sciCalculate() {
+  try {
+    let evalString = sciExpression
+      .replace(/sin\(/g, 'Math.sin(')
+      .replace(/cos\(/g, 'Math.cos(')
+      .replace(/tan\(/g, 'Math.tan(')
+      .replace(/log\(/g, 'Math.log10(')
+      .replace(/√\(/g, 'Math.sqrt(')
+      .replace(/π/g, 'Math.PI')
+      .replace(/\^/g, '**');
+
+    // Safe evaluation
+    let result = Function('"use strict";return (' + evalString + ')')();
+    
+    if (isNaN(result) || !isFinite(result)) {
+      sciExpression = "Error";
+    } else {
+      sciExpression = Number.isInteger(result) ? result.toString() : result.toFixed(4).replace(/\.?0+$/, '');
+    }
+    updateSciDisplay();
+  } catch (error) {
+    sciExpression = "Error";
+    updateSciDisplay();
+  }
+}
+
+
+// ==================== 3. DOM ELEMENTS ====================
 const inputFieldsDiv = document.getElementById('inputFields');
 const formulaHintEl = document.getElementById('formulaHint');
 const resultAreaEl = document.getElementById('resultArea');
@@ -122,7 +173,8 @@ let explanationVisible = false;
 let soundEnabled = true;
 let audioCtx = null;
 
-// Helpers
+
+// ==================== 4. HELPERS ====================
 function hideError() { errorBox.classList.add('hidden'); }
 function showError(msg) { errorTextEl.textContent = msg; errorBox.classList.remove('hidden'); }
 function resetResults() { resultAreaEl.textContent = '—'; resultPerimeterEl.textContent = '—'; hideError(); }
@@ -130,7 +182,7 @@ function formatNumber(num) { return Number.isInteger(num) ? num.toString() : num
 function getCurrentUnit() { const s = document.getElementById('unitSelect'); return s ? s.value : 'cm'; }
 function getUnitSuffix(type) { const u = getCurrentUnit(); return type === 'area' ? u + '²' : type === 'volume' ? u + '³' : u; }
 
-// Sound Engine
+// Sound & Voice
 function playClick() {
   if (!soundEnabled) return;
   try {
@@ -148,28 +200,21 @@ function playClick() {
   } catch (e) {}
 }
 
-// Bolne wala function (Clear & Slow)
 function speakResult(text) {
   if (!soundEnabled) return;
   if ('speechSynthesis' in window) {
-    window.speechSynthesis.cancel(); // Pehle wali awaaz rok do
-    
+    window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'en-US'; 
-    
-    // Awaaz ko clear aur samajhne layak banane ke liye:
-    utterance.rate = 0.85;  // Speed thodi dheemi ki hai (0.85 = 85% speed)
-    utterance.pitch = 1.0;  // Awaaz ka tone normal hai
-    utterance.volume = 1.0; // Full volume
-    
-    // Awaaz ko thoda delay se play karein taake "Ting" ki awaaz khatam ho jaye
-    setTimeout(() => {
-      window.speechSynthesis.speak(utterance);
-    }, 300); 
+    utterance.lang = 'en-US';
+    utterance.rate = 0.85;
+    utterance.pitch = 1.0;
+    utterance.volume = 1.0;
+    setTimeout(() => { window.speechSynthesis.speak(utterance); }, 300);
   }
 }
 
-// Render Inputs
+
+// ==================== 5. RENDER & VALIDATE ====================
 function renderInputs(shapeKey) {
   const shape = SHAPES[shapeKey];
   if (!shape) return;
@@ -189,7 +234,6 @@ function renderInputs(shapeKey) {
   inputFieldsDiv.innerHTML = html;
 }
 
-// Validate
 function readAndValidateInputs() {
   const shape = SHAPES[currentShape];
   const values = {};
@@ -223,7 +267,8 @@ function readAndValidateInputs() {
   return values;
 }
 
-// Calculations
+
+// ==================== 6. CALCULATIONS ====================
 function calculateArea() {
   const values = readAndValidateInputs();
   if (!values) return;
@@ -236,11 +281,9 @@ function calculateArea() {
     resultAreaEl.textContent = text;
     saveToHistory(is3D ? 'Volume' : 'Area', text);
     
-    // Awaaz mein bolo
     let speakText = is3D ? "The volume is " : "The area is ";
     speakText += formatNumber(result) + " " + (is3D ? "cubic" : "square") + " " + getCurrentUnit();
     speakResult(speakText);
-
   } catch (e) { showError('Calculation error.'); }
 }
 
@@ -256,11 +299,9 @@ function calculatePerimeter() {
     resultPerimeterEl.textContent = text;
     saveToHistory(is3D ? 'Surface Area' : 'Perimeter', text);
     
-    // Awaaz mein bolo
     let speakText = is3D ? "The surface area is " : "The perimeter is ";
     speakText += formatNumber(result) + " " + (is3D ? "square" : "") + " " + getCurrentUnit();
     speakResult(speakText);
-
   } catch (e) { showError('Calculation error.'); }
 }
 
@@ -270,7 +311,6 @@ function clearAll() {
   resetResults();
 }
 
-// Switch Shape
 function switchShape(shapeKey) {
   if (!SHAPES[shapeKey]) return;
   currentShape = shapeKey;
@@ -296,7 +336,8 @@ function switchShape(shapeKey) {
   if (explanationVisible) renderExplanation();
 }
 
-// Theme
+
+// ==================== 7. UI FEATURES ====================
 function setupThemeToggle() {
   const toggleBtn = document.getElementById('themeToggle');
   if (!toggleBtn) return;
@@ -315,7 +356,6 @@ function setupThemeToggle() {
   });
 }
 
-// History
 const HISTORY_KEY = 'calcHistory';
 function getHistory() { try { return JSON.parse(localStorage.getItem(HISTORY_KEY)) || []; } catch (e) { return []; } }
 function saveToHistory(type, result) {
@@ -344,13 +384,11 @@ function setupHistory() {
   renderHistory();
 }
 
-// Unit
 function setupUnitSelector() {
   const unitSelect = document.getElementById('unitSelect');
   if (unitSelect) unitSelect.addEventListener('change', () => { renderInputs(currentShape); resetResults(); });
 }
 
-// Explanation
 function setupExplanation() {
   const toggleBtn = document.getElementById('explanationToggle');
   const content = document.getElementById('explanationContent');
@@ -383,7 +421,6 @@ function renderExplanation() {
     </div>`;
 }
 
-// Print, Copy & Sound Setup
 function setupPrintAndCopy() {
   const printBtn = document.getElementById('btnPrint');
   if (printBtn) printBtn.addEventListener('click', () => window.print());
@@ -408,25 +445,53 @@ function setupPrintAndCopy() {
       soundIcon.textContent = soundEnabled ? '🔊' : '🔇';
       soundText.textContent = soundEnabled ? 'Sound On' : 'Sound Off';
       if (soundEnabled) playClick(); 
-      else window.speechSynthesis.cancel(); // Agar off kiya to bolna band ho jaye
+      else window.speechSynthesis.cancel(); 
     });
   }
 
   document.querySelectorAll('button').forEach(btn => {
-    btn.addEventListener('click', () => {
-      setTimeout(playClick, 50); 
-    });
+    btn.addEventListener('click', () => { setTimeout(playClick, 50); });
   });
 }
 
-// Main Init
+
+// ==================== 8. MAIN INIT ====================
 function init() {
+  // Normal Shape Buttons
   shapeBtns.forEach(btn => btn.addEventListener('click', () => switchShape(btn.dataset.shape)));
-  
   document.getElementById('btnArea').addEventListener('click', calculateArea);
   document.getElementById('btnPerimeter').addEventListener('click', calculatePerimeter);
   document.getElementById('btnClear').addEventListener('click', clearAll);
 
+  // Scientific Calculator Open/Close Logic
+  const sciModeBtn = document.getElementById('sciModeBtn');
+  const closeSciBtn = document.getElementById('closeSciBtn');
+  const sciPanel = document.getElementById('scientificPanel');
+  const mainGroups = document.querySelectorAll('.shape-group');
+  const topBar = document.querySelector('.top-bar');
+  const unitSel = document.querySelector('.unit-selector');
+  
+  if (sciModeBtn) {
+    sciModeBtn.addEventListener('click', () => {
+      sciPanel.classList.remove('hidden');
+      document.querySelector('main.calculator').classList.add('hidden');
+      mainGroups.forEach(g => g.classList.add('hidden'));
+      if(topBar) topBar.classList.add('hidden');
+      if(unitSel) unitSel.classList.add('hidden');
+    });
+  }
+  
+  if (closeSciBtn) {
+    closeSciBtn.addEventListener('click', () => {
+      sciPanel.classList.add('hidden');
+      document.querySelector('main.calculator').classList.remove('hidden');
+      mainGroups.forEach(g => g.classList.remove('hidden'));
+      if(topBar) topBar.classList.remove('hidden');
+      if(unitSel) unitSel.classList.remove('hidden');
+    });
+  }
+
+  // Setup Features
   setupThemeToggle();
   setupHistory();
   setupUnitSelector();
@@ -437,3 +502,10 @@ function init() {
 }
 
 init();
+
+// PWA Service Worker Registration
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js');
+  });
+}

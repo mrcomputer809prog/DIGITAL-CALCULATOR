@@ -440,4 +440,56 @@ body.dark-mode .btn-clear-history {
 
 body.dark-mode .btn-clear-history:hover {
   box-shadow: 0 8px 25px rgba(229, 45, 39, 0.6);
+}/* ============================================================
+   SCIENTIFIC CALCULATOR STYLES
+   ============================================================ */
+
+#scientificPanel {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto 30px auto;
+  padding: 30px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(15px);
+  border-radius: 25px;
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  animation: fadeInScale 0.4s ease;
+}
+
+.sci-btn {
+  padding: 15px 10px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  border: 1px solid var(--glass-border);
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.5);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+body.dark-mode .sci-btn {
+  background: rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.sci-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+  background: rgba(255, 255, 255, 0.8);
+}
+
+body.dark-mode .sci-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.sci-btn:active {
+  transform: translateY(0);
+}
+
+.num-btn {
+  background: var(--card-bg);
+  font-weight: 800;
 }
