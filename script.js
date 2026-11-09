@@ -503,7 +503,49 @@ function init() {
 
 init();
 
-// PWA Service Worker Registration
+init();
+
+// ==================== INSTALL APP LOGIC (PWA) ====================
+let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  // Browser ko rok lein ke wo khud se popup na dikhaye
+  e.preventDefault();
+  deferredPrompt = e;
+  
+  // Hamara banaya hua "Install App" button dikhayein
+  const installBtn = document.getElementById('installAppBtn');
+  if (installBtn) {
+    installBtn.classList.remove('hidden');
+  }
+});
+
+// Jab user "Install App" wale button par click kare
+document.addEventListener('DOMContentLoaded', () => {
+  const installBtn = document.getElementById('installAppBtn');
+  if (installBtn) {
+    installBtn.addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+      
+      // Install ka popup dikhayein
+      deferredPrompt.prompt();
+      
+      // User ka jawab check karein
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        console.log('User accepted the install prompt');
+      } else {
+        console.log('User dismissed the install prompt');
+      }
+      
+      // Prompt ek baar use hone ke baad reset kar dein
+      deferredPrompt = null;
+      installBtn.classList.add('hidden');
+    });
+  }
+});
+
+// ==================== PWA SERVICE WORKER ====================
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js');
