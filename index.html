@@ -2,43 +2,24 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Digital Calculator</title>
-  
+  <!-- Favicon (Tab ka icon) -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📐</text></svg>">
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#0d47a1">
-
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; object-src 'none'; base-uri 'self';">
-
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- Animated Background -->
+  <!-- Modern Animated Background -->
   <div class="animated-bg">
     <div class="circle circle1"></div>
     <div class="circle circle2"></div>
     <div class="circle circle3"></div>
   </div>
 
-  <!-- ================= TOP BAR ================= -->
-  <div class="top-bar">
-    <select id="languageSelect" class="theme-toggle" style="padding: 10px 15px; font-weight: bold; cursor: pointer; border-radius: 50px; outline: none; margin-right: 10px;" onchange="changeLanguage(this.value)">
-      <option value="en">🇬🇧 English</option>
-      <option value="ur">🇵🇰 Urdu</option>
-      <option value="ar">🇸🇦 Arabic</option>
-      <option value="hi">🇮🇳 Hindi</option>
-      <option value="zh-CN">🇨🇳 Chinese</option>
-      <option value="fr">🇫🇷 French</option>
-      <option value="es">🇪🇸 Spanish</option>
-    </select>
-
-    <button id="installAppBtn" class="theme-toggle hidden" style="background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%); color: white; border: none; margin-right: 10px;">
-      <span class="toggle-icon">📲</span>
-      <span class="toggle-text">Install App</span>
-    </button>
-
+  <!-- ================= TOP BAR WITH DARK MODE TOGGLE ================= -->
+   <div class="top-bar">
+    <!-- Naya Sound Button -->
     <button id="soundToggle" class="theme-toggle" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); margin-right: 10px;">
       <span class="toggle-icon" id="soundIcon">🔊</span>
       <span class="toggle-text" id="soundText">Sound On</span>
@@ -52,216 +33,16 @@
 
   <!-- ================= HEADER ================= -->
   <header class="site-header">
-    <h1>📐 Digital Calculator</h1>
+    <h1>📐 Digital  Calculator</h1>
     <p class="welcome">Welcome! Calculate area & perimeter of shapes instantly.</p>
-    <p class="description">A simple, accurate and professional calculator for 2D and 3D geometric shapes.</p>
+    <p class="description">
+      A simple, accurate and professional calculator for 2D and 3D geometric shapes.
+      Works on desktop and mobile. No internet required after download.
+    </p>
   </header>
 
-  <!-- ================= TOOLS MENU ================= -->
-  <div class="modes-container">
-    <!-- Desktop Scientific Button (Mobile par bhi main button) -->
-    <button id="sciModeBtn" class="btn mode-btn" style="background: linear-gradient(135deg, #8e2de2, #4a00e0); color: white; padding: 15px 30px; font-size: 1.1rem; border-radius: 30px;">
-      🧮 Scientific Calculator
-    </button>
-
-    <!-- Mobile 3 Dots Menu Button -->
-    <button id="mobileMenuBtn" class="btn mobile-menu-btn">⋮</button>
-
-    <!-- Baqi Tools (Desktop par direct, Mobile par dropdown) -->
-    <div class="more-tools-menu" id="moreToolsMenu">
-      <button id="unitConvBtn" class="btn" style="background: linear-gradient(135deg, #11998e, #38ef7d); color: white; padding: 15px 25px; border-radius: 30px;">📏 Unit Converter</button>
-      <button id="ratioCalcBtn" class="btn" style="background: linear-gradient(135deg, #f12711, #f5af19); color: white; padding: 15px 25px; border-radius: 30px;">⚖️ Ratio</button>
-      <button id="percentageCalcBtn" class="btn" style="background: linear-gradient(135deg, #00b4db, #0083b0); color: white; padding: 15px 25px; border-radius: 30px;">📊 Percentage</button>
-      <button id="logCalcBtn" class="btn" style="background: linear-gradient(135deg, #8E2DE2, #4A00E0); color: white; padding: 15px 25px; border-radius: 30px;">📈 Logarithm</button>
-      <button id="mobileCurrencyBtn" class="btn" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; padding: 15px 25px; border-radius: 30px;">🌍 Currency</button>
-    </div>
-  </div>
-
-  <!-- ================= CURRENCY CONVERTER BUTTON (Desktop Only) ================= -->
-  <div style="width: 100%; max-width: 950px; margin: 0 auto 25px auto; padding: 0 10px;" class="desktop-currency-wrapper">
-    <button id="currencyCalcBtn" class="btn" style="width: 100%; padding: 18px; background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; font-size: 1.2rem; border-radius: 15px; box-shadow: 0 10px 20px rgba(30, 60, 114, 0.4); font-weight: bold; display: flex; justify-content: center; align-items: center; gap: 10px;">
-      🌍 Currency Converter (Live Exchange Rates)
-    </button>
-  </div>
-
-  <!-- ================= SCIENTIFIC PANEL ================= -->
-  <div id="scientificPanel" class="calculator hidden" style="flex-direction: column; align-items: center; justify-content: center; max-width: 600px; margin: 0 auto 30px auto;">
-    <h2 style="color: var(--text-accent); margin-bottom: 20px;">🧮 Scientific Calculator</h2>
-    <input type="text" id="sciDisplay" readonly style="width: 100%; max-width: 400px; padding: 20px; font-size: 2rem; text-align: right; border-radius: 15px; border: 2px solid var(--glass-border); background: var(--input-bg); color: var(--text-primary); margin-bottom: 20px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.1);">
-    <div id="sciButtons" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; width: 100%; max-width: 400px;">
-      <button class="sci-btn" onclick="sciInput('sin(')">sin</button>
-      <button class="sci-btn" onclick="sciInput('cos(')">cos</button>
-      <button class="sci-btn" onclick="sciInput('tan(')">tan</button>
-      <button class="sci-btn" onclick="sciInput('π')">π</button>
-      <button class="sci-btn" onclick="sciInput('asin(')">sin⁻¹</button>
-      <button class="sci-btn" onclick="sciInput('acos(')">cos⁻¹</button>
-      <button class="sci-btn" onclick="sciInput('atan(')">tan⁻¹</button>
-      <button class="sci-btn" onclick="sciInput('!')">!</button>
-      <button class="sci-btn" onclick="sciInput('log(')">log</button>
-      <button class="sci-btn" onclick="sciInput('√(')">√</button>
-      <button class="sci-btn" onclick="sciInput('^2')">x²</button>
-      <button class="sci-btn" onclick="sciInput('^3')">x³</button>
-      <button class="sci-btn" onclick="sciInput('(')">(</button>
-      <button class="sci-btn" onclick="sciInput(')')">)</button>
-      <button class="sci-btn" onclick="sciClear()" style="color: #ff4b2b;">C</button>
-      <button class="sci-btn" onclick="sciDelete()" style="color: #ff4b2b;">⌫</button>
-      <button class="sci-btn num-btn" onclick="sciInput('7')">7</button>
-      <button class="sci-btn num-btn" onclick="sciInput('8')">8</button>
-      <button class="sci-btn num-btn" onclick="sciInput('9')">9</button>
-      <button class="sci-btn" onclick="sciInput('/')" style="color: #0d47a1;">÷</button>
-      <button class="sci-btn num-btn" onclick="sciInput('4')">4</button>
-      <button class="sci-btn num-btn" onclick="sciInput('5')">5</button>
-      <button class="sci-btn num-btn" onclick="sciInput('6')">6</button>
-      <button class="sci-btn" onclick="sciInput('*')" style="color: #0d47a1;">×</button>
-      <button class="sci-btn num-btn" onclick="sciInput('1')">1</button>
-      <button class="sci-btn num-btn" onclick="sciInput('2')">2</button>
-      <button class="sci-btn num-btn" onclick="sciInput('3')">3</button>
-      <button class="sci-btn" onclick="sciInput('-')" style="color: #0d47a1;">−</button>
-      <button class="sci-btn num-btn" onclick="sciInput('0')">0</button>
-      <button class="sci-btn num-btn" onclick="sciInput('.')">.</button>
-      <button class="sci-btn" onclick="sciCalculate()" style="background: #2e7d32; color: white; grid-column: span 2;">=</button>
-      <button class="sci-btn" onclick="sciInput('+')" style="color: #0d47a1;">+</button>
-    </div>
-    <button id="closeSciBtn" class="btn" style="margin-top: 20px; background: #ff4b2b; color: white; width: 100%; max-width: 400px;">Close Calculator</button>
-  </div>
-
-  <!-- ================= UNIT CONVERTER PANEL ================= -->
-  <div id="unitConverterPanel" class="calculator hidden" style="flex-direction: column; align-items: center; justify-content: center; max-width: 600px; margin: 0 auto 30px auto;">
-    <h2 style="color: var(--text-accent); margin-bottom: 20px;">📏 Universal Unit Converter</h2>
-    <div style="display: flex; gap: 10px; margin-bottom: 20px; width: 100%;">
-      <select id="convCategory" class="unit-selector select" style="flex: 1; padding: 12px; border-radius: 12px; font-weight: bold;" onchange="updateConverterUnits()">
-        <option value="length">Length</option>
-        <option value="weight">Weight</option>
-        <option value="temp">Temperature</option>
-        <option value="data">Data Storage</option>
-        <option value="time">Time</option>
-      </select>
-    </div>
-    <div style="display: flex; gap: 15px; width: 100%; flex-wrap: wrap; align-items: center;">
-      <div style="flex: 1; min-width: 200px;">
-        <input type="number" id="convInput" placeholder="Enter value" style="width: 100%; padding: 15px; border-radius: 12px; border: 2px solid var(--input-border); background: var(--input-bg); color: var(--text-primary); font-size: 1.2rem; outline: none;" oninput="convertUnit()">
-        <select id="convFrom" class="unit-selector select" style="width: 100%; margin-top: 10px; padding: 10px; border-radius: 10px;" onchange="convertUnit()"></select>
-      </div>
-      <div style="font-size: 1.5rem; color: var(--text-accent); font-weight: bold;">=</div>
-      <div style="flex: 1; min-width: 200px;">
-        <input type="text" id="convOutput" readonly placeholder="Result" style="width: 100%; padding: 15px; border-radius: 12px; border: 2px solid var(--glass-border); background: var(--result-bg); color: var(--text-accent); font-size: 1.2rem; font-weight: bold; outline: none;">
-        <select id="convTo" class="unit-selector select" style="width: 100%; margin-top: 10px; padding: 10px; border-radius: 10px;" onchange="convertUnit()"></select>
-      </div>
-    </div>
-    <button id="closeConvBtn" class="btn" style="margin-top: 25px; background: #ff4b2b; color: white; width: 100%;">Close Converter</button>
-  </div>
-
-  <!-- ================= RATIO PANEL ================= -->
-  <div id="ratioCalculatorPanel" class="calculator hidden" style="flex-direction: column; align-items: center; justify-content: center; max-width: 600px; margin: 0 auto 30px auto;">
-    <h2 style="color: var(--text-accent); margin-bottom: 20px;">⚖️ Ratio Calculator</h2>
-    <div style="display: flex; gap: 10px; width: 100%; margin-bottom: 15px;">
-      <input type="text" id="ratioInputs" placeholder="e.g. 10, 5, 20 (comma se alag karein)" style="flex: 1; padding: 15px; border-radius: 12px; border: 2px solid var(--input-border); background: var(--input-bg); color: var(--text-primary); font-size: 1.1rem; outline: none;">
-    </div>
-    <button class="btn btn-area" onclick="calculateRatio()" style="width: 100%; margin-bottom: 15px;">Calculate Ratio</button>
-    <div style="width: 100%; padding: 20px; background: var(--result-bg); border-radius: 12px; border: 1px solid var(--glass-border); text-align: center;">
-      <span style="font-size: 0.9rem; color: var(--text-secondary); text-transform: uppercase; font-weight: bold;">Simplest Ratio:</span>
-      <div id="ratioResult" style="font-size: 2rem; font-weight: 800; color: var(--text-accent); margin-top: 10px;">—</div>
-    </div>
-    <button id="closeRatioBtn" class="btn" style="margin-top: 25px; background: #ff4b2b; color: white; width: 100%;">Close Calculator</button>
-  </div>
-
-  <!-- ================= PERCENTAGE PANEL ================= -->
-  <div id="percentageCalculatorPanel" class="calculator hidden" style="flex-direction: column; align-items: center; justify-content: center; max-width: 600px; margin: 0 auto 30px auto;">
-    <h2 style="color: var(--text-accent); margin-bottom: 20px;">📊 Percentage Calculator</h2>
-    <div style="display: flex; gap: 15px; width: 100%; flex-wrap: wrap; margin-bottom: 20px;">
-      <div style="flex: 1; min-width: 200px;">
-        <label style="font-weight: 600; font-size: 0.9rem; margin-bottom: 5px; display: block;">Obtained Numbers</label>
-        <input type="number" id="percObtained" placeholder="e.g. 25" style="width: 100%; padding: 15px; border-radius: 12px; border: 2px solid var(--input-border); background: var(--input-bg); color: var(--text-primary); font-size: 1.1rem; outline: none;">
-      </div>
-      <div style="flex: 1; min-width: 200px;">
-        <label style="font-weight: 600; font-size: 0.9rem; margin-bottom: 5px; display: block;">Total Numbers</label>
-        <input type="number" id="percTotal" placeholder="e.g. 100" style="width: 100%; padding: 15px; border-radius: 12px; border: 2px solid var(--input-border); background: var(--input-bg); color: var(--text-primary); font-size: 1.1rem; outline: none;">
-      </div>
-    </div>
-    <button class="btn btn-area" onclick="calculatePercentage()" style="width: 100%; margin-bottom: 15px;">Calculate Percentage</button>
-    <div style="width: 100%; padding: 20px; background: var(--result-bg); border-radius: 12px; border: 1px solid var(--glass-border); text-align: center;">
-      <span style="font-size: 0.9rem; color: var(--text-secondary); text-transform: uppercase; font-weight: bold;">Result:</span>
-      <div id="percentageResult" style="font-size: 2.5rem; font-weight: 800; color: var(--text-accent); margin-top: 10px;">—</div>
-    </div>
-    <button id="closePercentageBtn" class="btn" style="margin-top: 25px; background: #ff4b2b; color: white; width: 100%;">Close Calculator</button>
-  </div>
-
-  <!-- ================= LOG PANEL ================= -->
-  <div id="logCalculatorPanel" class="calculator hidden" style="flex-direction: column; align-items: center; justify-content: center; max-width: 600px; margin: 0 auto 30px auto;">
-    <h2 style="color: var(--text-accent); margin-bottom: 20px;">📈 Logarithm Calculator</h2>
-    <div style="width: 100%; margin-bottom: 20px;">
-      <select id="logType" class="unit-selector select" style="width: 100%; padding: 15px; border-radius: 12px; border: 2px solid var(--input-border); background: var(--input-bg); color: var(--text-primary); font-size: 1.1rem; outline: none; font-weight: bold;">
-        <option value="log10">Log base 10 (Common Log)</option>
-        <option value="ln">Natural Log (ln - base e)</option>
-        <option value="log2">Log base 2 (Binary Log)</option>
-        <option value="custom">Custom Base (Log_b)</option>
-      </select>
-    </div>
-    <div style="display: flex; gap: 15px; width: 100%; flex-wrap: wrap; margin-bottom: 20px;">
-      <div style="flex: 1; min-width: 200px;">
-        <label style="font-weight: 600; font-size: 0.9rem; margin-bottom: 5px; display: block;">Number (x)</label>
-        <input type="number" id="logNumber" placeholder="e.g. 100" style="width: 100%; padding: 15px; border-radius: 12px; border: 2px solid var(--input-border); background: var(--input-bg); color: var(--text-primary); font-size: 1.1rem; outline: none;">
-      </div>
-      <div id="customBaseDiv" style="flex: 1; min-width: 200px; display: none;">
-        <label style="font-weight: 600; font-size: 0.9rem; margin-bottom: 5px; display: block;">Base (b)</label>
-        <input type="number" id="logBase" placeholder="e.g. 2" style="width: 100%; padding: 15px; border-radius: 12px; border: 2px solid var(--input-border); background: var(--input-bg); color: var(--text-primary); font-size: 1.1rem; outline: none;">
-      </div>
-    </div>
-    <button class="btn btn-area" onclick="calculateLog()" style="width: 100%; margin-bottom: 15px;">Calculate Logarithm</button>
-    <div style="width: 100%; padding: 20px; background: var(--result-bg); border-radius: 12px; border: 1px solid var(--glass-border); text-align: center;">
-      <span style="font-size: 0.9rem; color: var(--text-secondary); text-transform: uppercase; font-weight: bold;">Result:</span>
-      <div id="logResult" style="font-size: 2.5rem; font-weight: 800; color: var(--text-accent); margin-top: 10px;">—</div>
-    </div>
-    <button id="closeLogBtn" class="btn" style="margin-top: 25px; background: #ff4b2b; color: white; width: 100%;">Close Calculator</button>
-  </div>
-
-  <!-- ================= CURRENCY PANEL ================= -->
-  <div id="currencyCalculatorPanel" class="calculator hidden" style="flex-direction: column; align-items: center; justify-content: center; max-width: 600px; margin: 0 auto 30px auto;">
-    <h2 style="color: var(--text-accent); margin-bottom: 20px;">🌍 Currency Converter</h2>
-    <div style="display: flex; gap: 15px; width: 100%; flex-wrap: wrap; margin-bottom: 20px;">
-      <div style="flex: 1; min-width: 200px;">
-        <label style="font-weight: 600; font-size: 0.9rem; margin-bottom: 5px; display: block;">Amount</label>
-        <input type="number" id="currAmount" placeholder="e.g. 100" style="width: 100%; padding: 15px; border-radius: 12px; border: 2px solid var(--input-border); background: var(--input-bg); color: var(--text-primary); font-size: 1.1rem; outline: none;" oninput="convertCurrency()">
-      </div>
-    </div>
-    <div style="display: flex; gap: 15px; width: 100%; flex-wrap: wrap; align-items: center; margin-bottom: 20px;">
-      <div style="flex: 1; min-width: 150px;">
-        <label style="font-weight: 600; font-size: 0.9rem; margin-bottom: 5px; display: block;">From</label>
-        <select id="currFrom" class="unit-selector select" style="width: 100%; padding: 15px; border-radius: 12px; font-weight: bold;" onchange="convertCurrency()">
-          <option value="usd">🇺🇸 USD - US Dollar</option>
-          <option value="pkr">🇵🇰 PKR - Pakistani Rupee</option>
-          <option value="eur">🇪🇺 EUR - Euro</option>
-          <option value="gbp">🇬🇧 GBP - British Pound</option>
-          <option value="inr">🇮🇳 INR - Indian Rupee</option>
-          <option value="sar">🇸🇦 SAR - Saudi Riyal</option>
-          <option value="aed">🇦🇪 AED - UAE Dirham</option>
-        </select>
-      </div>
-      <div style="font-size: 1.5rem; color: var(--text-accent); font-weight: bold; margin-top: 20px;">⇌</div>
-      <div style="flex: 1; min-width: 150px;">
-        <label style="font-weight: 600; font-size: 0.9rem; margin-bottom: 5px; display: block;">To</label>
-        <select id="currTo" class="unit-selector select" style="width: 100%; padding: 15px; border-radius: 12px; font-weight: bold;" onchange="convertCurrency()">
-          <option value="pkr">🇵🇰 PKR - Pakistani Rupee</option>
-          <option value="usd">🇺🇸 USD - US Dollar</option>
-          <option value="eur">🇪🇺 EUR - Euro</option>
-          <option value="gbp">🇬🇧 GBP - British Pound</option>
-          <option value="inr">🇮🇳 INR - Indian Rupee</option>
-          <option value="sar">🇸🇦 SAR - Saudi Riyal</option>
-          <option value="aed">🇦🇪 AED - UAE Dirham</option>
-        </select>
-      </div>
-    </div>
-    <button class="btn btn-area" onclick="convertCurrency()" style="width: 100%; margin-bottom: 20px; font-weight: bold; font-size: 1.1rem; padding: 15px;">🔄 Convert Currency</button>
-    <div style="width: 100%; padding: 20px; background: var(--result-bg); border-radius: 12px; border: 1px solid var(--glass-border); text-align: center;">
-      <span style="font-size: 0.9rem; color: var(--text-secondary); text-transform: uppercase; font-weight: bold;">Converted Amount:</span>
-      <div id="currencyResult" style="font-size: 2.5rem; font-weight: 800; color: var(--text-accent); margin-top: 10px;">—</div>
-      <div id="currencyRateInfo" style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 5px;">Fetching live rates...</div>
-    </div>
-    <button id="closeCurrencyBtn" class="btn" style="margin-top: 25px; background: #ff4b2b; color: white; width: 100%;">Close Calculator</button>
-  </div>
-
-  <!-- ================= 2D SHAPES ================= -->
-  <div class="shape-group" id="mainShapeGroups">
+     <!-- ================= 2D SHAPES ================= -->
+  <div class="shape-group">
     <h3 class="shape-group-title">📐 2D Shapes (Area & Perimeter)</h3>
     <nav class="shape-nav" id="shapeNav">
       <button class="shape-btn active" data-shape="rectangle">▭ Rectangle</button>
@@ -286,13 +67,11 @@
       <button class="shape-btn" data-shape="sphere">🔮 Sphere</button>
       <button class="shape-btn" data-shape="cylinder">🥫 Cylinder</button>
       <button class="shape-btn" data-shape="cone">🍦 Cone</button>
-      <button class="shape-btn" data-shape="pyramid">🔺 Pyramid</button>
-      <button class="shape-btn" data-shape="hemisphere">🌗 Hemisphere</button>
-      <button class="shape-btn" data-shape="torus">🍩 Torus</button>
+      <button class="shape-btn" data-shape="pyramid">🔺 Square Pyramid</button>
     </nav>
   </div>
-
-  <!-- ================= UNIT SELECTOR ================= -->
+  
+   <!-- ================= UNIT SELECTOR ================= -->
   <div class="unit-selector">
     <label for="unitSelect">📏 Measurement Unit:</label>
     <select id="unitSelect">
@@ -305,12 +84,11 @@
     </select>
   </div>
 
-  <!-- ================= MAIN CALCULATOR ================= -->
   <main class="calculator">
     <section class="input-panel">
       <div class="formula-hint" id="formulaHint">Select a shape to see its formula</div>
       <div id="inputFields"></div>
-      <div class="action-buttons">
+                <div class="action-buttons">
         <button class="btn btn-area" id="btnArea">📐 Calculate Area</button>
         <button class="btn btn-perimeter" id="btnPerimeter">📏 Calculate Perimeter</button>
         <button class="btn btn-clear" id="btnClear">⟲ Clear / Reset</button>
@@ -318,8 +96,8 @@
       </div>
     </section>
 
-    <aside class="result-panel">
-      <div class="result-box">
+       <aside class="result-panel">
+            <div class="result-box">
         <span class="result-label" id="label1">Area</span>
         <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
           <span class="result-value" id="resultArea">—</span>
@@ -339,7 +117,20 @@
     </aside>
   </main>
 
-  <!-- ================= HISTORY ================= -->
+  <!-- ================= FORMULA EXPLANATION ================= -->
+  <section class="explanation-section">
+    <button class="explanation-toggle" id="explanationToggle">
+      📖 Show Formula Explanation
+    </button>
+    <div class="explanation-content hidden" id="explanationContent">
+      <h3 id="explanationTitle">Formula Explanation</h3>
+      <div class="explanation-body" id="explanationBody">
+        <p>Select a shape to see its explanation.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CALCULATION HISTORY ================= -->
   <section class="history-section">
     <div class="history-header">
       <h2>📜 Calculation History</h2>
@@ -350,19 +141,8 @@
     </div>
   </section>
 
-  <!-- ================= EXPLANATION ================= -->
-  <section class="explanation-section">
-    <button class="explanation-toggle" id="explanationToggle">📖 Show Formula Explanation</button>
-    <div class="explanation-content hidden" id="explanationContent">
-      <h3 id="explanationTitle">Formula Explanation</h3>
-      <div class="explanation-body" id="explanationBody"><p>Select a shape to see its explanation.</p></div>
-    </div>
-  </section>
-
-  <!-- ================= FOOTER ================= -->
   <footer class="site-footer">
-    <p>© 2026 Digital Calculator | Built for learning & real use.</p>
-    <p>Developed with ❤️ by <strong>Mr. Computer</strong></p>
+    <p>© 2026 Geometric Shapes Calculator | Built for learning & real use.</p>
   </footer>
 
   <script src="script.js"></script>
